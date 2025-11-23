@@ -45,10 +45,10 @@ async function seed() {
                 amenities: ['High-Speed WiFi', '3 Times Food', '24/7 Hot Water', 'CCTV Security', 'Power Backup', 'Daily Housekeeping', 'Laundry Service', 'Study Room'],
                 media: {
                     images: [
-                        'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80',
-                        'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-                        'https://images.unsplash.com/photo-1522771753037-6333d7911961?ixlib=rb-4.0.3&auto=format&fit=crop&w=2051&q=80',
-                        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+                        'https://placehold.co/800x600/1e40af/ffffff?text=Sai+Balaji+Room',
+                        'https://placehold.co/800x600/1e40af/ffffff?text=Common+Area',
+                        'https://placehold.co/800x600/1e40af/ffffff?text=Dining+Hall',
+                        'https://placehold.co/800x600/1e40af/ffffff?text=Study+Room'
                     ],
                     virtualTourUrl: 'https://kuula.co/share/collection/7lVLq',
                 },
@@ -71,10 +71,10 @@ async function seed() {
                 amenities: ['High-Speed WiFi', 'Gym Access', 'Library 24/7', 'Mess Food', '24/7 Power Backup', 'CCTV Security', 'Sports Facilities', 'Common Rooms'],
                 media: {
                     images: [
-                        'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80',
-                        'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-                        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-                        'https://images.unsplash.com/photo-1540518614846-7eded433c457?ixlib=rb-4.0.3&auto=format&fit=crop&w=2057&q=80'
+                        'https://placehold.co/800x600/059669/ffffff?text=DSU+Hostel+Room',
+                        'https://placehold.co/800x600/059669/ffffff?text=Gym+Facility',
+                        'https://placehold.co/800x600/059669/ffffff?text=Library',
+                        'https://placehold.co/800x600/059669/ffffff?text=Campus+View'
                     ],
                     virtualTourUrl: 'https://kuula.co/share/collection/7lVLq',
                 },
@@ -97,10 +97,10 @@ async function seed() {
                 amenities: ['WiFi', 'Bike Parking', 'Basic Furniture', 'Water Supply 24/7', 'Security Guard', 'Common Kitchen'],
                 media: {
                     images: [
-                        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-                        'https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-                        'https://images.unsplash.com/photo-1522771753037-6333d7911961?ixlib=rb-4.0.3&auto=format&fit=crop&w=2051&q=80',
-                        'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+                        'https://placehold.co/800x600/dc2626/ffffff?text=Green+View+Room',
+                        'https://placehold.co/800x600/dc2626/ffffff?text=Kitchen+Area',
+                        'https://placehold.co/800x600/dc2626/ffffff?text=Parking+Space',
+                        'https://placehold.co/800x600/dc2626/ffffff?text=Building+View'
                     ],
                     virtualTourUrl: 'https://kuula.co/share/collection/7lVLq',
                 },
