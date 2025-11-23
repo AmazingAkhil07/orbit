@@ -83,7 +83,11 @@ async function seed() {
                 price: { amount: 4500, period: 'monthly' },
                 amenities: ['WiFi', 'Parking', 'No Mess'],
                 media: {
-                    images: ['https://placehold.co/600x400/09090b/3b82f6?text=Green+View'],
+                    images: [
+                        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+                        'https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+                        'https://images.unsplash.com/photo-1522771753037-6333d7911961?ixlib=rb-4.0.3&auto=format&fit=crop&w=2051&q=80'
+                    ],
                 },
                 liveStats: { totalRooms: 20, occupiedRooms: 5 },
                 verdict: 'Good for budget. You need to arrange your own food.',
