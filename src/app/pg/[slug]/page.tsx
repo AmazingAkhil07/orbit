@@ -115,23 +115,26 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                                                 alt="Main view"
                                                 fill
                                                 className="object-cover"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
                                             />
                                         </div>
-                                        <div className="grid grid-rows-2 gap-2">
+                                        <div className="grid grid-rows-2 gap-2 h-full">
                                             <div className="relative w-full h-full">
                                                 <Image
-                                                    src={property.media.images[1] || property.media.images[0]}
+                                                    src={property.media.images[1]}
                                                     alt="Secondary view 1"
                                                     fill
                                                     className="object-cover"
+                                                    sizes="(max-width: 768px) 50vw, 25vw"
                                                 />
                                             </div>
                                             <div className="relative w-full h-full">
                                                 <Image
-                                                    src={property.media.images[2] || property.media.images[0]}
+                                                    src={property.media.images[2]}
                                                     alt="Secondary view 2"
                                                     fill
                                                     className="object-cover"
+                                                    sizes="(max-width: 768px) 50vw, 25vw"
                                                 />
                                             </div>
                                         </div>
