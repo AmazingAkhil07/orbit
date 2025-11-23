@@ -10,6 +10,11 @@ import { BookingButton } from '@/components/BookingButton';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { Button } from '@/components/ui/button';
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+
 async function getProperty(slug: string) {
     await dbConnect();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
