@@ -18,8 +18,8 @@ export default async function DashboardPage() {
 
     await dbConnect();
 
-    const role = session.user.role;
-    const userId = session.user.id;
+    const role = (session.user as Record<string, unknown>).role as string;
+    const userId = (session.user as Record<string, unknown>).id as string;
 
     if (role === 'student') {
         const bookings = await Booking.find({ studentId: userId })
@@ -37,32 +37,35 @@ export default async function DashboardPage() {
                         <p className="text-zinc-500">No bookings yet.</p>
                     ) : (
                         <div className="grid gap-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {bookings.map((booking: any) => (
-                                <Card key={booking._id.toString()} className="bg-zinc-900 border-zinc-800">
-                                    <CardHeader>
-                                        <div className="flex justify-between items-center">
-                                            <CardTitle>{booking.propertyId.title}</CardTitle>
-                                            <Badge variant={booking.status === 'paid' ? 'default' : 'secondary'}>
-                                                {booking.status.toUpperCase()}
-                                            </Badge>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="flex justify-between text-sm text-zinc-400">
-                                            <span>Amount Paid: ₹{booking.amountPaid}</span>
-                                            <span>Date: {new Date(booking.createdAt).toLocaleDateString()}</span>
-                                        </div>
-                                        <div className="mt-2 text-xs text-zinc-500">
-                                            Payment ID: {booking.paymentId}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                            {bookings.map((booking: Record<string, unknown>) => {
+                                const bookingData = booking as Record<string, unknown>;
+                                return (
+                                    <Card key={booking._id as string} className="bg-zinc-900 border-zinc-800">
+                                        <CardHeader>
+                                            <div className="flex justify-between items-center">
+                                                <CardTitle>{(bookingData.propertyId as Record<string, unknown>)?.title as string}</CardTitle>
+                                                <Badge variant={(bookingData.status as string) === 'paid' ? 'default' : 'secondary'}>
+                                                    {(bookingData.status as string).toUpperCase()}
+                                                </Badge>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="flex justify-between text-sm text-zinc-400">
+                                                <span>Amount Paid: ₹{bookingData.amountPaid as number}</span>
+                                                <span>Date: {new Date(bookingData.createdAt as string).toLocaleDateString()}</span>
+                                            </div>
+                                            <div className="mt-2 text-xs text-zinc-500">
+                                                Payment ID: {bookingData.paymentId as string}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })
+                            }
+                        </div >
                     )}
-                </div>
-            </div>
+                </div >
+            </div >
         );
     }
 
@@ -79,38 +82,42 @@ export default async function DashboardPage() {
                 <div className="space-y-6">
                     <h2 className="text-xl font-semibold">My Listings & Live Stats</h2>
                     <div className="grid gap-6">
-                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                        {properties.map((prop: any) => (
-                            <Card key={prop._id.toString()} className="bg-zinc-900 border-zinc-800">
-                                <CardHeader>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <CardTitle>{prop.title}</CardTitle>
-                                            <p className="text-sm text-zinc-400">{prop.location.address}</p>
-                                        </div>
-                                        <Badge variant="outline">{prop.slug}</Badge>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex items-center justify-between bg-zinc-800/50 p-4 rounded-lg">
-                                        <div>
-                                            <div className="text-sm text-zinc-400">Occupancy</div>
-                                            <div className="text-2xl font-bold">
-                                                {prop.liveStats.occupiedRooms} / {prop.liveStats.totalRooms}
+                        {properties.map((prop: Record<string, unknown>) => {
+                            const propData = prop as Record<string, unknown>;
+                            const location = propData.location as Record<string, unknown>;
+                            const liveStats = propData.liveStats as Record<string, unknown>;
+                            return (
+                                <Card key={prop._id as string} className="bg-zinc-900 border-zinc-800">
+                                    <CardHeader>
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <CardTitle>{propData.title as string}</CardTitle>
+                                                <p className="text-sm text-zinc-400">{location.address as string}</p>
                                             </div>
+                                            <Badge variant="outline">{propData.slug as string}</Badge>
                                         </div>
-                                        <LiveStatsCounter
-                                            propertyId={prop._id.toString()}
-                                            initialCount={prop.liveStats.occupiedRooms}
-                                            total={prop.liveStats.totalRooms}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex items-center justify-between bg-zinc-800/50 p-4 rounded-lg">
+                                            <div>
+                                                <div className="text-sm text-zinc-400">Occupancy</div>
+                                                <div className="text-2xl font-bold">
+                                                    {liveStats.occupiedRooms as number} / {liveStats.totalRooms as number}
+                                                </div>
+                                            </div>
+                                            <LiveStatsCounter
+                                                propertyId={(prop._id as Record<string, unknown>).toString()}
+                                                initialCount={liveStats.occupiedRooms as number}
+                                                total={liveStats.totalRooms as number}
+                                            />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         );
     }
 

@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     try {
         // Create Booking
         const booking = await Booking.create({
+
             studentId: session.user.id,
             propertyId,
             status: 'paid', // Mock success
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
         });
 
         return NextResponse.json(booking, { status: 201 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 });
     }
 }

@@ -55,6 +55,15 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
         notFound();
     }
 
+    const propData = property as Record<string, unknown>;
+    const location = propData.location as Record<string, unknown>;
+    const media = propData.media as Record<string, unknown>;
+    const mediaImages = media.images as string[];
+    const liveStats = propData.liveStats as Record<string, unknown>;
+    const price = propData.price as Record<string, unknown>;
+    const sentimentTags = propData.sentimentTags as string[];
+    const amenities = propData.amenities as string[];
+
     return (
         <div className="min-h-screen bg-[#0a0a0a] pb-20">
             {/* Immersive Header Image */}
@@ -81,7 +90,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                             <MapPin className="h-5 w-5 mr-2 text-blue-500" />
                             {property.location.address}
                         </div>
-                    </ScrollReveal>
+                    </ScrollReveal >
                 </div>
             </div>
 

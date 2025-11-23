@@ -24,6 +24,7 @@ export async function PATCH(
         }
 
         // Check ownership
+
         if (property.ownerId.toString() !== session.user.id && session.user.role !== 'admin') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
         }
@@ -34,7 +35,7 @@ export async function PATCH(
 
         await property.save();
         return NextResponse.json(property);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to update property' }, { status: 500 });
     }
 }

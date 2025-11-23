@@ -11,7 +11,7 @@ import { IProperty } from '@/models/Property';
 
 async function getProperties(search: string) {
     await dbConnect();
-    const query: FilterQuery<IProperty> = {};
+    const query: Record<string, unknown> = {};
     if (search) {
         query.$or = [
             { title: { $regex: search, $options: 'i' } },
@@ -63,61 +63,70 @@ export default async function SearchPage({
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                    {properties.map((prop: any) => (
-                        <Link href={`/pg/${prop.slug}`} key={prop._id}>
-                            <Card className="bg-zinc-900 border-zinc-800 hover:border-blue-500/50 transition-all duration-300 h-full overflow-hidden group">
-                                <div className="relative h-56 overflow-hidden">
-                                    <img
-                                        src={prop.media.images[0]}
-                                        alt={prop.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white flex items-center gap-1">
-                                        <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                                        4.5
-                                    </div>
-                                    {prop.liveStats.occupiedRooms >= prop.liveStats.totalRooms && (
-                                        <div className="absolute top-2 left-2 bg-red-500/90 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-white">
-                                            FULL
+                    {properties.map((prop: Record<string, unknown>) => {
+                        const propData = prop as Record<string, unknown>;
+                        const media = propData.media as Record<string, unknown>;
+                        const images = media.images as string[];
+                        const liveStats = propData.liveStats as Record<string, unknown>;
+                        const location = propData.location as Record<string, unknown>;
+                        const amenities = propData.amenities as string[];
+                        const price = propData.price as Record<string, unknown>;
+                        return (
+                            <Link href={`/pg/${propData.slug}`} key={prop._id as string}>
+                                <Card className="bg-zinc-900 border-zinc-800 hover:border-blue-500/50 transition-all duration-300 h-full overflow-hidden group">
+                                    <div className="relative h-56 overflow-hidden">
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={images[0]}
+                                            alt={propData.title as string}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium text-white flex items-center gap-1">
+                                            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                                            4.5
                                         </div>
-                                    )}
-                                </div>
-                                <CardHeader className="pb-2">
-                                    <div className="flex justify-between items-start">
-                                        <CardTitle className="text-lg">{prop.title}</CardTitle>
-                                        <Badge variant={prop.liveStats.occupiedRooms < prop.liveStats.totalRooms ? "default" : "destructive"} className="ml-2">
-                                            {prop.liveStats.totalRooms - prop.liveStats.occupiedRooms} Left
-                                        </Badge>
+                                        {(liveStats.occupiedRooms as number) >= (liveStats.totalRooms as number) && (
+                                            <div className="absolute top-2 left-2 bg-red-500/90 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-white">
+                                                FULL
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="flex items-center text-zinc-400 text-sm">
-                                        <MapPin className="h-3 w-3 mr-1" />
-                                        {prop.location.address}
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="pb-2">
-                                    <div className="flex flex-wrap gap-2 mb-3">
-                                        {prop.amenities.slice(0, 4).map((amenity: string) => (
-                                            <Badge key={amenity} variant="secondary" className="bg-zinc-800 text-zinc-300">
-                                                {amenity}
+                                    <CardHeader className="pb-2">
+                                        <div className="flex justify-between items-start">
+                                            <CardTitle className="text-lg">{propData.title as string}</CardTitle>
+                                            <Badge variant={(liveStats.occupiedRooms as number) < (liveStats.totalRooms as number) ? "default" : "destructive"} className="ml-2">
+                                                {(liveStats.totalRooms as number) - (liveStats.occupiedRooms as number)} Left
                                             </Badge>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                                <CardFooter className="pt-0 flex items-center justify-between">
-                                    <div>
-                                        <span className="text-xl font-bold text-blue-400">₹{prop.price.amount}</span>
-                                        <span className="text-zinc-500 text-sm">/{prop.price.period}</span>
-                                    </div>
-                                    <Button size="sm" className="bg-zinc-100 text-zinc-900 hover:bg-white">
-                                        View Details
-                                    </Button>
-                                </CardFooter>
-                            </Card>
-                        </Link>
-                    ))}
+                                        </div>
+                                        <div className="flex items-center text-zinc-400 text-sm">
+                                            <MapPin className="h-3 w-3 mr-1" />
+                                            {location.address as string}
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="pb-2">
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {amenities.slice(0, 4).map((amenity: string) => (
+                                                <Badge key={amenity} variant="secondary" className="bg-zinc-800 text-zinc-300">
+                                                    {amenity}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                    <CardFooter className="pt-0 flex items-center justify-between">
+                                        <div>
+                                            <span className="text-xl font-bold text-blue-400">₹{price.amount as number}</span>
+                                            <span className="text-zinc-500 text-sm">/{price.period as string}</span>
+                                        </div>
+                                        <Button size="sm" className="bg-zinc-100 text-zinc-900 hover:bg-white">
+                                            View Details
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            </Link>
+                        );
+                    })}
                 </div>
             )}
-        </div>
+        </div >
     );
 }
