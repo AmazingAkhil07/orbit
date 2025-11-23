@@ -16,8 +16,8 @@ export const revalidate = 0;
 
 // Helper function to ensure we have 4 valid images with fallbacks
 function ensureValidImages(property: any) {
-    // Use picsum.photos for reliable placeholder images
-    // Different seed values ensure different images
+    // Use Unsplash images for reliable fallbacks
+    // Different images ensure variety
     const placeholders = [
         'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1522771753035-4a53c9d1314f?q=80&w=2070&auto=format&fit=crop',
