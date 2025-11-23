@@ -96,13 +96,12 @@ async function seed() {
         ];
 
         for (const prop of properties) {
-            const exists = await Property.findOne({ slug: prop.slug });
-            if (!exists) {
-                console.log(`Creating ${prop.title}...`);
-                await Property.create(prop);
-            } else {
-                console.log(`${prop.title} already exists.`);
-            }
+            console.log(`Upserting ${prop.title}...`);
+            await Property.updateOne(
+                { slug: prop.slug },
+                { $set: prop },
+                { upsert: true }
+            );
         }
 
         console.log('Seeding complete.');

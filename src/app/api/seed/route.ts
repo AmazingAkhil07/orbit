@@ -87,10 +87,11 @@ export async function GET() {
         ];
 
         for (const prop of properties) {
-            const exists = await Property.findOne({ slug: prop.slug });
-            if (!exists) {
-                await Property.create(prop);
-            }
+            await Property.updateOne(
+                { slug: prop.slug },
+                { $set: prop },
+                { upsert: true }
+            );
         }
 
         return NextResponse.json({ message: 'Database seeded successfully' });
