@@ -4,12 +4,15 @@ import User from '@/models/User';
 import Property from '@/models/Property';
 
 export async function GET() {
+    console.log('=== API: GET /api/seed ===');
     await dbConnect();
 
     try {
         // 1. Create an Owner
+        console.log('Creating or finding owner...');
         let owner = await User.findOne({ email: 'owner@orbit.com' });
         if (!owner) {
+            console.log('  Owner not found, creating...');
             owner = await User.create({
                 name: 'Orbit Owner',
                 email: 'owner@orbit.com',
@@ -17,9 +20,13 @@ export async function GET() {
                 isVerified: true,
                 phone: '9999999999',
             });
+            console.log('  Owner created');
+        } else {
+            console.log('  Owner already exists');
         }
 
         // 2. Create Properties
+        console.log('Creating properties...');
         const properties = [
             {
                 ownerId: owner!._id,
@@ -83,14 +90,21 @@ export async function GET() {
         ];
 
         for (const prop of properties) {
+            console.log(`  Checking property: ${prop.slug}`);
             const exists = await Property.findOne({ slug: prop.slug });
             if (!exists) {
+                console.log(`    Creating ${prop.slug}...`);
                 await Property.create(prop);
+                console.log(`    Created successfully`);
+            } else {
+                console.log(`    Already exists`);
             }
         }
 
+        console.log('Seed complete');
         return NextResponse.json({ message: 'Database seeded successfully' });
     } catch (error) {
+        console.error('Seed failed:', error);
         return NextResponse.json({ error: 'Failed to seed database', details: error }, { status: 500 });
     }
 }

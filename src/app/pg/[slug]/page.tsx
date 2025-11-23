@@ -10,7 +10,7 @@ import { BookingButton } from '@/components/BookingButton';
 async function getProperty(slug: string) {
     await dbConnect();
     const property = await Property.findOne({ slug }).populate('ownerId', 'name').lean();
-    return property;
+    return property as Record<string, unknown> | null;
 }
 
 export default async function PropertyPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -21,19 +21,28 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
         notFound();
     }
 
+    const propData = property as Record<string, unknown>;
+    const location = propData.location as Record<string, unknown>;
+    const media = propData.media as Record<string, unknown>;
+    const mediaImages = media.images as string[];
+    const liveStats = propData.liveStats as Record<string, unknown>;
+    const price = propData.price as Record<string, unknown>;
+    const sentimentTags = propData.sentimentTags as string[];
+    const amenities = propData.amenities as string[];
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Media & Details */}
                 <div className="lg:col-span-2 space-y-8">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold mb-2">{property.title}</h1>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-2">{propData.title as string}</h1>
                         <div className="flex items-center text-zinc-400 mb-4">
                             <MapPin className="h-4 w-4 mr-1" />
-                            {property.location.address}
+                            {location.address as string}
                         </div>
                         <div className="flex flex-wrap gap-2">
-                            {property.sentimentTags.map((tag: string) => (
+                            {sentimentTags.map((tag: string) => (
                                 <Badge key={tag} variant="outline" className="border-blue-500/30 text-blue-400">
                                     {tag}
                                 </Badge>
@@ -50,18 +59,19 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                         </TabsList>
                         <TabsContent value="photos" className="mt-4">
                             <div className="aspect-video rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
-                                    src={property.media.images[0]}
-                                    alt={property.title}
+                                    src={mediaImages[0]}
+                                    alt={propData.title as string}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
                         </TabsContent>
                         <TabsContent value="360" className="mt-4">
                             <div className="aspect-video rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                {property.media.virtualTourUrl ? (
+                                {media.virtualTourUrl ? (
                                     <iframe
-                                        src={property.media.virtualTourUrl}
+                                        src={media.virtualTourUrl as string}
                                         className="w-full h-full border-0"
                                         allowFullScreen
                                     />
@@ -72,7 +82,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                         </TabsContent>
                         <TabsContent value="video" className="mt-4">
                             <div className="aspect-video rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                {property.location.directionsVideoUrl ? (
+                                {location.directionsVideoUrl ? (
                                     <div className="text-zinc-500">Video Player Placeholder</div>
                                 ) : (
                                     <div className="text-zinc-500">No Video available</div>
@@ -86,13 +96,13 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                         <div>
                             <h3 className="text-xl font-bold mb-4">About</h3>
                             <p className="text-zinc-400 leading-relaxed">
-                                {property.description}
+                                {propData.description as string}
                             </p>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold mb-4">Amenities</h3>
                             <ul className="space-y-2">
-                                {property.amenities.map((amenity: string) => (
+                                {amenities.map((amenity: string) => (
                                     <li key={amenity} className="flex items-center text-zinc-300">
                                         <Check className="h-4 w-4 mr-2 text-green-500" />
                                         {amenity}
@@ -139,7 +149,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                                 Circle13 Verdict
                             </div>
                             <p className="text-zinc-300 text-sm italic">
-                                "{property.verdict || 'Verified by our team. Safe and recommended.'}"
+                                &ldquo;{propData.verdict as string || 'Verified by our team. Safe and recommended.'}&rdquo;
                             </p>
                         </div>
 
@@ -147,27 +157,26 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                         <Card className="bg-zinc-900 border-zinc-800">
                             <CardContent className="p-6">
                                 <div className="flex justify-between items-baseline mb-6">
-                                    <span className="text-3xl font-bold">₹{property.price.amount}</span>
-                                    <span className="text-zinc-500">/{property.price.period}</span>
+                                    <span className="text-3xl font-bold">₹{price.amount as number}</span>
+                                    <span className="text-zinc-500">/{price.period as string}</span>
                                 </div>
 
                                 <div className="space-y-4 mb-6">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-zinc-400">Status</span>
-                                        <span className={property.liveStats.occupiedRooms < property.liveStats.totalRooms ? "text-green-500" : "text-red-500"}>
-                                            {property.liveStats.occupiedRooms < property.liveStats.totalRooms ? "Available" : "Sold Out"}
+                                        <span className={(liveStats.occupiedRooms as number) < (liveStats.totalRooms as number) ? "text-green-500" : "text-red-500"}>
+                                            {(liveStats.occupiedRooms as number) < (liveStats.totalRooms as number) ? "Available" : "Sold Out"}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-zinc-400">Rooms Left</span>
-                                        <span>{property.liveStats.totalRooms - property.liveStats.occupiedRooms}</span>
+                                        <span>{(liveStats.totalRooms as number) - (liveStats.occupiedRooms as number)}</span>
                                     </div>
                                 </div>
 
                                 <BookingButton
-                                    propertyId={property._id.toString()}
-                                    price={property.price.amount}
-                                    propertyTitle={property.title}
+                                    propertyId={(propData._id as Record<string, unknown>).toString()}
+                                    propertyTitle={propData.title as string}
                                 />
                             </CardContent>
                         </Card>

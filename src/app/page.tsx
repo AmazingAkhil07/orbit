@@ -71,10 +71,12 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {properties.map((prop: any) => (
               <Link href={`/pg/${prop.slug}`} key={prop._id}>
                 <Card className="bg-zinc-900 border-zinc-800 hover:border-blue-500/50 transition-all duration-300 h-full overflow-hidden group">
                   <div className="relative h-48 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={prop.media.images[0]}
                       alt={prop.title}

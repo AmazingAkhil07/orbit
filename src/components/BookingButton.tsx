@@ -10,12 +10,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Loader2, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export function BookingButton({ propertyId, price, propertyTitle }: { propertyId: string, price: number, propertyTitle: string }) {
+export function BookingButton({ propertyId, propertyTitle }: { propertyId: string, propertyTitle: string }) {
     const { data: session } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);

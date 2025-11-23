@@ -66,12 +66,16 @@ export const authOptions: NextAuthOptions = {
                 await dbConnect();
                 const dbUser = await User.findOne({ email: session.user.email });
                 if (dbUser) {
-                    // @ts-ignore
+                    // @ts-expect-error - id is not in default session type
                     session.user.id = dbUser._id.toString();
-                    // @ts-ignore
+                    // @ts-expect-error - role is not in default session type
                     session.user.role = dbUser.role;
-                    // @ts-ignore
+                    // @ts-expect-error - isVerified is not in default session type
                     session.user.isVerified = dbUser.isVerified;
+                } else if (token) {
+                    // Fallback to token if dbUser fetch fails or for other providers
+                    // @ts-expect-error - sub is not in default session type
+                    session.user.id = token.sub;
                 }
             }
             return session;

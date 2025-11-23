@@ -12,7 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Rocket, Search, User } from 'lucide-react';
+import { Rocket, Search } from 'lucide-react';
 
 export function Navbar() {
     const { data: session } = useSession();
