@@ -122,7 +122,16 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                                 </TabsContent>
                                 <TabsContent value="video" className="mt-0">
                                     <div className="aspect-video rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                        <div className="text-zinc-500">Video Player Placeholder</div>
+                                        {property.location.directionsVideoUrl ? (
+                                            <iframe
+                                                src={property.location.directionsVideoUrl.replace('youtube.com/shorts/', 'youtube.com/embed/')}
+                                                className="w-full h-full border-0"
+                                                allowFullScreen
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            />
+                                        ) : (
+                                            <div className="text-zinc-500">No directions video available</div>
+                                        )}
                                     </div>
                                 </TabsContent>
                             </Tabs>
