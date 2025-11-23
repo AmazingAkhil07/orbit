@@ -66,11 +66,8 @@ export const authOptions: NextAuthOptions = {
                 await dbConnect();
                 const dbUser = await User.findOne({ email: session.user.email });
                 if (dbUser) {
-                    // @ts-expect-error -- Extending session user type
                     session.user.id = dbUser._id.toString();
-                    // @ts-expect-error -- Extending session user type
                     session.user.role = dbUser.role;
-                    // @ts-expect-error -- Extending session user type
                     session.user.isVerified = dbUser.isVerified;
                 }
             }
