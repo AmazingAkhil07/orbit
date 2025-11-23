@@ -34,7 +34,7 @@ const FEATURED_PROPERTIES = [
     slug: 'green-view',
     location: 'Near Bus Stand',
     price: 4500,
-    image: 'https://images.unsplash.com/photo-1522771753037-6333d7911961?ixlib=rb-4.0.3&auto=format&fit=crop&w=2051&q=80',
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
     rating: 3.8,
     tags: ['Budget', 'Freedom'],
   },
