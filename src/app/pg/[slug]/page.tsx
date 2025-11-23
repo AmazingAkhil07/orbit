@@ -88,8 +88,15 @@ const MOCK_PROPERTIES: Record<string, any> = {
 
 async function getProperty(slug: string) {
     console.log("Fetching property for slug:", slug);
-    // Forcing mock data to ensure UI works while DB is down
-    return MOCK_PROPERTIES[slug] || MOCK_PROPERTIES['sai-balaji-pg'];
+    const found = MOCK_PROPERTIES[slug];
+    if (found) return found;
+
+    // Return a debug object if not found, instead of Sai Balaji
+    return {
+        ...MOCK_PROPERTIES['sai-balaji-pg'],
+        title: `DEBUG: Property Not Found (${slug})`,
+        description: `Could not find property with slug: '${slug}'. Available keys: ${Object.keys(MOCK_PROPERTIES).join(', ')}`
+    };
 
     /* 
     try {
