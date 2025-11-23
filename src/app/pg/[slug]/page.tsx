@@ -16,11 +16,13 @@ export const revalidate = 0;
 
 // Helper function to ensure we have 4 valid images with fallbacks
 function ensureValidImages(property: any) {
+    // Use picsum.photos for reliable placeholder images
+    // Different seed values ensure different images
     const placeholders = [
-        `https://placehold.co/800x600/1e40af/ffffff?text=${encodeURIComponent(property.title + ' - Room')}`,
-        `https://placehold.co/800x600/059669/ffffff?text=${encodeURIComponent(property.title + ' - Area')}`,
-        `https://placehold.co/800x600/dc2626/ffffff?text=${encodeURIComponent(property.title + ' - View')}`,
-        `https://placehold.co/800x600/7c3aed/ffffff?text=${encodeURIComponent(property.title + ' - Facility')}`
+        'https://picsum.photos/seed/room1/800/600',
+        'https://picsum.photos/seed/area2/800/600',
+        'https://picsum.photos/seed/view3/800/600',
+        'https://picsum.photos/seed/facility4/800/600'
     ];
 
     // Ensure we have at least 4 images
