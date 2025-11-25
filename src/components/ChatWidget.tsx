@@ -441,7 +441,6 @@ export function ChatWidget() {
                         </Magnetic>
                     </div>
                 </PopoverTrigger>
-// ... rest of the component ...
                 <PopoverContent
                     className="w-[400px] p-0 bg-black border border-zinc-800 shadow-2xl rounded-2xl overflow-hidden mr-4 mb-4"
                     align="end"
