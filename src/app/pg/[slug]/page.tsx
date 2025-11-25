@@ -30,19 +30,20 @@ function ensureValidImages(property: any) {
         : [];
 
     // Fill with placeholders if needed
-    if (images.length < 4) {
-        const needed = 4 - images.length;
+    const currentCount = images.length;
+    if (currentCount < 4) {
+        const needed = 4 - currentCount;
         for (let i = 0; i < needed; i++) {
-            // Use modulo to cycle through placeholders if we need more than available (though we have 4)
-            // And offset by existing images count to avoid duplicates if possible
-            images.push(placeholders[(images.length + i) % placeholders.length]);
+            // Use the initial count + i to pick placeholders sequentially
+            // This avoids the issue of using the changing array length
+            images.push(placeholders[(currentCount + i) % placeholders.length]);
         }
     }
 
     return {
         ...property,
         media: {
-            ...property.media,
+            ...(property.media || {}),
             images: images
         }
     };
