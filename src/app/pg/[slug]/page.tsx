@@ -112,6 +112,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
                         {/* Media Gallery */}
                         <ScrollReveal delay={0.2}>
                             <PropertyImageGallery 
+                                key={property._id.toString()}
                                 images={property.media.images}
                                 virtualTourUrl={property.media.virtualTourUrl}
                                 videoUrl={property.location.directionsVideoUrl}

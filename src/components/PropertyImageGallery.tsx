@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Share2, Heart } from 'lucide-react';
@@ -24,12 +24,18 @@ export function PropertyImageGallery({
 }) {
     const [imageSources, setImageSources] = useState(images);
 
+    // Update state when props change (e.g. navigation)
+    useEffect(() => {
+        setImageSources(images);
+    }, [images]);
+
     const handleImageError = (index: number) => {
-        const newSources = [...imageSources];
-        // If the image at this index fails, replace it with a placeholder
-        // Use modulo to cycle through placeholders based on the index
-        newSources[index] = PLACEHOLDERS[index % PLACEHOLDERS.length];
-        setImageSources(newSources);
+        console.log(`Image at index ${index} failed to load. Swapping with placeholder.`);
+        setImageSources(prev => {
+            const newSources = [...prev];
+            newSources[index] = PLACEHOLDERS[index % PLACEHOLDERS.length];
+            return newSources;
+        });
     };
 
     return (
@@ -50,8 +56,8 @@ export function PropertyImageGallery({
                 </div>
             </div>
             <TabsContent value="photos" className="mt-0">
-                <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden aspect-video relative">
-                    <div className="relative w-full h-full">
+                <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden aspect-video relative bg-zinc-900">
+                    <div className="relative w-full h-full bg-zinc-800">
                         <Image
                             src={imageSources[0] || PLACEHOLDERS[0]}
                             alt="Main view"
@@ -59,10 +65,11 @@ export function PropertyImageGallery({
                             className="object-cover"
                             sizes="(max-width: 768px) 100vw, 50vw"
                             onError={() => handleImageError(0)}
+                            priority
                         />
                     </div>
                     <div className="grid grid-rows-2 gap-2 h-full">
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full bg-zinc-800">
                             <Image
                                 src={imageSources[1] || PLACEHOLDERS[1]}
                                 alt="Secondary view 1"
@@ -72,7 +79,7 @@ export function PropertyImageGallery({
                                 onError={() => handleImageError(1)}
                             />
                         </div>
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full bg-zinc-800">
                             <Image
                                 src={imageSources[2] || PLACEHOLDERS[2]}
                                 alt="Secondary view 2"
