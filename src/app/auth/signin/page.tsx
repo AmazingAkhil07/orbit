@@ -34,7 +34,8 @@ export default function SignIn() {
                         <Button
                             size="lg"
                             className="w-full py-6 text-lg font-medium bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg shadow-primary/20 transition-all duration-300 hover:scale-[1.02]"
-                            onClick={() => signIn('auth0', { callbackUrl: '/dashboard' })}
+                            onClick={() => signIn('auth0', { callbackUrl: '/' })}
+                            suppressHydrationWarning
                         >
                             Sign in / Sign up
                             <ArrowRight className="ml-2 w-5 h-5" />

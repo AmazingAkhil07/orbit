@@ -47,6 +47,7 @@ export default async function SearchPage({
                                 defaultValue={search}
                                 placeholder="Search..."
                                 className="pl-9 bg-zinc-900 border-zinc-800"
+                                suppressHydrationWarning
                             />
                         </form>
                     </div>

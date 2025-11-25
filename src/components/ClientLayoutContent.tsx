@@ -51,9 +51,9 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
 
     return (
         <>
-            <Preloader />
-            <CustomCursor />
-            <NoiseOverlay />
+            {mounted && <Preloader />}
+            {mounted && <CustomCursor />}
+            {mounted && <NoiseOverlay />}
             {mounted && NavbarComponent ? <NavbarComponent /> : <div className="h-16 border-b border-zinc-800" />}
             <main className="flex-1">
                 {children}

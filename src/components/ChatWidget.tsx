@@ -41,16 +41,26 @@ interface UserPreferences {
     availability?: string;
 }
 
-const QUICK_ACTIONS = [
+const STUDENT_QUICK_ACTIONS = [
     { label: '🏠 Find Properties', value: 'find_properties' },
     { label: '📋 Check Booking', value: 'How do I check my booking?' },
     { label: '💬 Need Help', value: 'Can you help me?' },
     { label: '❓ FAQ', value: 'What is Orbit?' },
 ];
 
-export function ChatWidget() {
+const ADMIN_QUICK_ACTIONS = [
+    { label: '👥 User Management', value: 'How do I manage users?' },
+    { label: '📊 Platform Stats', value: 'Show me platform statistics' },
+    { label: '✅ Approve Properties', value: 'What properties need approval?' },
+    { label: '❓ Admin Help', value: 'What admin features are available?' },
+];
+
+export function ChatWidget({ userRole = 'student' }: { userRole?: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState('');
+    
+    // Determine quick actions based on role
+    const QUICK_ACTIONS = userRole === 'admin' ? ADMIN_QUICK_ACTIONS : STUDENT_QUICK_ACTIONS;
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
@@ -63,6 +73,11 @@ export function ChatWidget() {
     const [manualLocation, setManualLocation] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
+
+    // Debug logging
+    useEffect(() => {
+        console.log('ChatWidget - User Role Received:', userRole);
+    }, [userRole]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -111,10 +126,14 @@ export function ChatWidget() {
     // Show welcome message on first open
     useEffect(() => {
         if (isOpen && messages.length === 0) {
-            let welcomeContent = '👋 Hey there! I\'m Orbit Assistant, your AI-powered housing guide. I can help you find properties, check bookings, and answer questions about student housing. What can I help you with today?';
+            let welcomeContent = '';
 
-            if (propertyContext) {
+            if (userRole === 'admin') {
+                welcomeContent = '👋 Welcome, Admin! I\'m Orbit Assistant, your AI-powered admin guide. I can help you manage users, properties, bookings, and provide platform insights. How can I assist with your admin tasks today?';
+            } else if (propertyContext) {
                 welcomeContent = `👋 Welcome! I see you're viewing **${propertyContext.title}** in **${propertyContext.location}** (₹${propertyContext.price}/${propertyContext.period}). \n\nI can help you with questions about this property, the booking process, nearby amenities, and more. What would you like to know?`;
+            } else {
+                welcomeContent = '👋 Hey there! I\'m Orbit Assistant, your AI-powered housing guide. I can help you find properties, check bookings, and answer questions about student housing. What can I help you with today?';
             }
 
             const welcomeMessage: Message = {
@@ -124,7 +143,7 @@ export function ChatWidget() {
             };
             setMessages([welcomeMessage]);
         }
-    }, [isOpen, propertyContext]);
+    }, [isOpen, propertyContext, userRole]);
 
     const handleQuickAction = async (action: string) => {
         setInput('');
@@ -175,6 +194,7 @@ export function ChatWidget() {
                     messages: [...messages, userMessage],
                     context: contextInfo,
                     foundPropertiesCount: foundProperties.length,
+                    userRole: userRole,
                 }),
             });
 
@@ -275,6 +295,7 @@ export function ChatWidget() {
                     messages: [...messages, userMessage],
                     context: contextInfo,
                     foundPropertiesCount: foundProperties.length,
+                    userRole: userRole,
                 }),
             });
 
@@ -717,6 +738,7 @@ export function ChatWidget() {
                     <div className="relative group">
                         <Button
                             size="icon"
+                            suppressHydrationWarning
                             className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-600 shadow-xl shadow-purple-600/50 transition-all hover:scale-110 hover:shadow-2xl relative overflow-hidden group"
                         >
                             {/* Animated background */}
@@ -770,6 +792,7 @@ export function ChatWidget() {
                         <Button
                             variant="ghost"
                             size="icon"
+                            suppressHydrationWarning
                             className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-800"
                             onClick={() => setIsOpen(false)}
                         >
@@ -864,6 +887,7 @@ export function ChatWidget() {
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
+                                                suppressHydrationWarning
                                                 className="h-6 w-6 p-0 text-zinc-400 hover:text-white hover:bg-zinc-700"
                                                 onClick={() => copyToClipboard(m.content, m.id)}
                                             >
@@ -874,6 +898,7 @@ export function ChatWidget() {
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="h-6 w-6 p-0 text-zinc-400 hover:text-green-400 hover:bg-zinc-700"
                                                     >
                                                         <ThumbsUp className="h-3 w-3" />
@@ -881,6 +906,7 @@ export function ChatWidget() {
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="h-6 w-6 p-0 text-zinc-400 hover:text-red-400 hover:bg-zinc-700"
                                                     >
                                                         <ThumbsDown className="h-3 w-3" />
@@ -958,16 +984,16 @@ export function ChatWidget() {
                                     <div className="space-y-2">
                                         <p className="text-xs text-zinc-400 font-semibold">Budget Options:</p>
                                         <div className="grid grid-cols-2 gap-2">
-                                            <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 3000, max: 5000 })}>
+                                            <Button size="sm" suppressHydrationWarning className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 3000, max: 5000 })}>
                                                 ₹3K - ₹5K
                                             </Button>
-                                            <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 5000, max: 8000 })}>
+                                            <Button size="sm" suppressHydrationWarning className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 5000, max: 8000 })}>
                                                 ₹5K - ₹8K
                                             </Button>
-                                            <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 8000, max: 12000 })}>
+                                            <Button size="sm" suppressHydrationWarning className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 8000, max: 12000 })}>
                                                 ₹8K - ₹12K
                                             </Button>
-                                            <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 12000, max: 20000 })}>
+                                            <Button size="sm" suppressHydrationWarning className="text-xs bg-blue-600 hover:bg-blue-700 transition-all hover:animate-heartbeat" onClick={() => handlePreferenceSelection('priceRange', { min: 12000, max: 20000 })}>
                                                 ₹12K+
                                             </Button>
                                         </div>
@@ -983,6 +1009,7 @@ export function ChatWidget() {
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <Button
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="text-xs bg-purple-600 hover:bg-purple-700 transition-all hover:scale-105"
                                                         onClick={() => handlePreferenceSelection('location', 'Harohalli')}
                                                     >
@@ -990,6 +1017,7 @@ export function ChatWidget() {
                                                     </Button>
                                                     <Button
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="text-xs bg-purple-600 hover:bg-purple-700 transition-all hover:animate-swing-in"
                                                         onClick={() => handlePreferenceSelection('location', 'Koramangala')}
                                                     >
@@ -997,6 +1025,7 @@ export function ChatWidget() {
                                                     </Button>
                                                     <Button
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="text-xs bg-purple-600 hover:bg-purple-700 transition-all hover:animate-swing-in"
                                                         onClick={() => handlePreferenceSelection('location', 'Indiranagar')}
                                                     >
@@ -1004,6 +1033,7 @@ export function ChatWidget() {
                                                     </Button>
                                                     <Button
                                                         size="sm"
+                                                        suppressHydrationWarning
                                                         className="text-xs bg-purple-600 hover:bg-purple-700 transition-all hover:animate-swing-in"
                                                         onClick={() => handlePreferenceSelection('location', 'Whitefield')}
                                                     >
@@ -1013,6 +1043,7 @@ export function ChatWidget() {
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
+                                                    suppressHydrationWarning
                                                     className="w-full text-xs border-zinc-500 hover:border-purple-500 hover:bg-purple-500/10 text-zinc-300"
                                                     onClick={() => setShowManualLocationInput(true)}
                                                 >
@@ -1029,6 +1060,7 @@ export function ChatWidget() {
                                                 />
                                                 <Button
                                                     size="sm"
+                                                    suppressHydrationWarning
                                                     className="text-xs bg-purple-600 hover:bg-purple-700 px-3"
                                                     onClick={() => {
                                                         if (manualLocation.trim()) {
@@ -1043,6 +1075,7 @@ export function ChatWidget() {
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
+                                                    suppressHydrationWarning
                                                     className="text-xs border-zinc-600 text-zinc-400 hover:bg-zinc-800 px-3"
                                                     onClick={() => {
                                                         setShowManualLocationInput(false);
@@ -1061,16 +1094,16 @@ export function ChatWidget() {
                                     <div className="space-y-2">
                                         <p className="text-xs text-zinc-400 font-semibold">Amenities (Optional):</p>
                                         <div className="grid grid-cols-2 gap-2">
-                                            <Button size="sm" variant="outline" className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['WiFi', 'Gym'])}>
+                                            <Button size="sm" variant="outline" suppressHydrationWarning className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['WiFi', 'Gym'])}>
                                                 WiFi + Gym
                                             </Button>
-                                            <Button size="sm" variant="outline" className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['Parking'])}>
+                                            <Button size="sm" variant="outline" suppressHydrationWarning className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['Parking'])}>
                                                 Parking
                                             </Button>
-                                            <Button size="sm" variant="outline" className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['Furnished'])}>
+                                            <Button size="sm" variant="outline" suppressHydrationWarning className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', ['Furnished'])}>
                                                 Furnished
                                             </Button>
-                                            <Button size="sm" variant="outline" className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', [])}>
+                                            <Button size="sm" variant="outline" suppressHydrationWarning className="text-xs border-zinc-600 hover:border-green-500 transition-all hover:animate-bounce-in-rotate" onClick={() => handlePreferenceSelection('amenities', [])}>
                                                 Skip
                                             </Button>
                                         </div>
@@ -1093,6 +1126,7 @@ export function ChatWidget() {
                             <Button
                                 type="submit"
                                 size="icon"
+                                suppressHydrationWarning
                                 disabled={isLoading || !input.trim()}
                                 className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 disabled:opacity-50"
                             >

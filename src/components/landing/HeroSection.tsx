@@ -82,7 +82,10 @@ export default function HeroSection() {
                                 className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-zinc-600 text-lg"
                             />
                             <Magnetic>
-                                <Button className="rounded-full h-12 px-8 bg-white text-black hover:bg-zinc-200 font-medium text-base transition-all hover:scale-105 active:scale-95">
+                                <Button 
+                                    className="rounded-full h-12 px-8 bg-white text-black hover:bg-zinc-200 font-medium text-base transition-all hover:scale-105 active:scale-95"
+                                    suppressHydrationWarning
+                                >
                                     Search
                                 </Button>
                             </Magnetic>
@@ -91,7 +94,11 @@ export default function HeroSection() {
                         <div className="mt-6 flex gap-4 text-sm text-zinc-500 font-medium">
                             <span>Trending:</span>
                             {['Near DSU', 'Koramangala', 'Electronic City'].map((item) => (
-                                <button key={item} className="hover:text-white transition-colors underline decoration-zinc-800 hover:decoration-white underline-offset-4">
+                                <button 
+                                    key={item} 
+                                    className="hover:text-white transition-colors underline decoration-zinc-800 hover:decoration-white underline-offset-4"
+                                    suppressHydrationWarning
+                                >
                                     {item}
                                 </button>
                             ))}

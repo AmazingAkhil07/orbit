@@ -64,6 +64,7 @@ export default function Home() {
 									<Button
 										variant='outline'
 										className='rounded-full border-zinc-700 text-white hover:bg-white hover:text-black transition-all h-12 px-8 text-base'
+										suppressHydrationWarning
 									>
 										View All Properties
 									</Button>
@@ -148,6 +149,7 @@ export default function Home() {
 									<Button
 										size='lg'
 										className='bg-white text-black hover:bg-zinc-200 rounded-full px-12 h-16 text-xl font-bold transition-all hover:scale-105'
+										suppressHydrationWarning
 									>
 										Get Started Now
 									</Button>

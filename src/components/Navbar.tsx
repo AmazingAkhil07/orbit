@@ -76,8 +76,16 @@ export function Navbar() {
                                     </div>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator className="bg-zinc-800" />
+                                {(session.user as any)?.role === 'admin' && (
+                                    <>
+                                        <DropdownMenuItem asChild className="focus:bg-zinc-800 focus:text-white cursor-pointer">
+                                            <Link href="/admin">Admin Dashboard</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator className="bg-zinc-800" />
+                                    </>
+                                )}
                                 <DropdownMenuItem asChild className="focus:bg-zinc-800 focus:text-white cursor-pointer">
-                                    <Link href="/dashboard">Dashboard</Link>
+                                    <Link href="/">Home</Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-zinc-800" />
                                 <DropdownMenuItem onClick={() => signOut()} className="focus:bg-zinc-800 focus:text-white cursor-pointer">
@@ -87,7 +95,12 @@ export function Navbar() {
                         </DropdownMenu>
                     ) : (
                         <Magnetic>
-                            <Button onClick={() => signIn()} size="sm" className="bg-white text-black hover:bg-zinc-200 rounded-full font-medium">
+                            <Button 
+                                onClick={() => signIn()} 
+                                size="sm" 
+                                className="bg-white text-black hover:bg-zinc-200 rounded-full font-medium"
+                                suppressHydrationWarning
+                            >
                                 Sign In
                             </Button>
                         </Magnetic>
