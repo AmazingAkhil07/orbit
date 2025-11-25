@@ -15,6 +15,7 @@ import {
 import { Rocket, Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import Magnetic from '@/components/ui/Magnetic';
 
 export function Navbar() {
     const { data: session } = useSession();
@@ -51,10 +52,12 @@ export function Navbar() {
                 {/* Actions */}
                 <div className="flex items-center gap-4">
                     <Link href="/search">
-                        <Button variant="ghost" size="sm" className="text-zinc-300 hover:text-white hover:bg-white/10 rounded-full">
-                            <Search className="h-4 w-4 mr-2" />
-                            Find PGs
-                        </Button>
+                        <Magnetic>
+                            <Button variant="ghost" size="sm" className="text-zinc-300 hover:text-white hover:bg-white/10 rounded-full">
+                                <Search className="h-4 w-4 mr-2" />
+                                Find PGs
+                            </Button>
+                        </Magnetic>
                     </Link>
 
                     {session ? (
@@ -87,9 +90,11 @@ export function Navbar() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <Button onClick={() => signIn()} size="sm" className="bg-white text-black hover:bg-zinc-200 rounded-full font-medium">
-                            Sign In
-                        </Button>
+                        <Magnetic>
+                            <Button onClick={() => signIn()} size="sm" className="bg-white text-black hover:bg-zinc-200 rounded-full font-medium">
+                                Sign In
+                            </Button>
+                        </Magnetic>
                     )}
                 </div>
             </div>
