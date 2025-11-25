@@ -11,6 +11,7 @@ import {
 import { Send, X, Sparkles, Copy, ThumbsUp, ThumbsDown, Zap, MapPin, Home, ExternalLink, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import { Logo } from '@/components/ui/Logo';
 
 interface Message {
     id: string;
@@ -58,7 +59,7 @@ const ADMIN_QUICK_ACTIONS = [
 export function ChatWidget({ userRole = 'student' }: { userRole?: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState('');
-    
+
     // Determine quick actions based on role
     const QUICK_ACTIONS = userRole === 'admin' ? ADMIN_QUICK_ACTIONS : STUDENT_QUICK_ACTIONS;
     const [messages, setMessages] = useState<Message[]>([]);
@@ -739,26 +740,22 @@ export function ChatWidget({ userRole = 'student' }: { userRole?: string }) {
                         <Button
                             size="icon"
                             suppressHydrationWarning
-                            className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-500 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-600 shadow-xl shadow-purple-600/50 transition-all hover:scale-110 hover:shadow-2xl relative overflow-hidden group"
+                            className="h-14 w-14 rounded-full bg-zinc-950 border border-zinc-800 hover:border-zinc-700 shadow-xl transition-all hover:scale-105 relative overflow-hidden group"
                         >
-                            {/* Animated background */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 group-hover:animate-shimmer"></div>
+                            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <Logo showText={false} iconClassName="w-6 h-6 text-white" />
 
-                            {/* Robot emoji */}
-                            <span className="text-3xl drop-shadow-lg relative z-10">🤖</span>
-
-                            {/* Pulsing dot indicator */}
-                            <span className="absolute top-0 right-0 h-4 w-4 bg-green-400 rounded-full border-2 border-white animate-pulse shadow-lg"></span>
+                            {/* Status Indicator */}
+                            <span className="absolute top-3 right-3 h-2 w-2 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
                         </Button>
 
                         {/* Tooltip - shows before first click */}
                         {showTooltip && !isOpen && (
-                            <div className="absolute bottom-full right-0 mb-3 px-4 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-purple-500/50 whitespace-nowrap animate-bounce z-50">
+                            <div className="absolute bottom-full right-0 mb-3 px-4 py-2 bg-zinc-950 text-white text-sm rounded-lg shadow-xl border border-zinc-800 whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-300 z-50">
                                 <div className="flex items-center gap-2">
-                                    <Lightbulb className="h-4 w-4 text-yellow-400" />
-                                    <span>For help, chat with me!</span>
+                                    <Sparkles className="h-3.5 w-3.5 text-white" />
+                                    <span className="font-medium">Orbit Concierge</span>
                                 </div>
-                                <div className="absolute bottom-0 right-4 w-2 h-2 bg-gray-900 rotate-45 -mb-1 border-r border-b border-purple-500/50"></div>
                             </div>
                         )}
                     </div>
@@ -773,19 +770,14 @@ export function ChatWidget({ userRole = 'student' }: { userRole?: string }) {
                     onOpenAutoFocus={() => setShowTooltip(false)}
                 >
                     {/* Header */}
-                    <div className={`bg-gradient-to-r ${getContextBadgeColor()}/20 border-b border-zinc-700 p-4 flex justify-between items-start`}>
+                    <div className="bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800 p-4 flex justify-between items-center">
                         <div className="flex items-center gap-3">
-                            <div className="relative">
-                                <div className={`absolute inset-0 bg-gradient-to-r ${getContextBadgeColor()} rounded-lg blur opacity-75`}></div>
-                                <div className="relative bg-zinc-900 rounded-lg p-2">
-                                    <Zap className="h-5 w-5 text-cyan-400" />
-                                </div>
-                            </div>
+                            <Logo showText={false} iconClassName="w-5 h-5" />
                             <div>
-                                <h3 className="font-bold text-white text-lg">Orbit AI</h3>
-                                <p className="text-xs text-zinc-400 flex items-center gap-1">
-                                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                                    {propertyContext ? 'Property Context Active' : 'Online'}
+                                <h3 className="font-semibold text-white text-sm tracking-tight">Concierge</h3>
+                                <p className="text-[10px] text-zinc-400 flex items-center gap-1.5 uppercase tracking-wider font-medium">
+                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_6px_rgba(16,185,129,0.4)]"></span>
+                                    {propertyContext ? 'Context Active' : 'Online'}
                                 </p>
                             </div>
                         </div>
