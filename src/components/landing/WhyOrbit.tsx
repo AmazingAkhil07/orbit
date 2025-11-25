@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
-import { Shield, Zap, Users, CheckCircle2 } from 'lucide-react';
+import { Shield, Zap, Users, CheckCircle2, MapPin, Utensils, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CARDS = [
@@ -38,6 +38,39 @@ const CARDS = [
     textColor: "text-white",
     icon: <Users className="w-8 h-8" />,
     stats: ["Weekly Events", "Study Groups", "Gaming Nights"]
+  },
+  {
+    id: 4,
+    title: "SLEEP IN.",
+    subtitle: "WALK TO CLASS.",
+    description: "Stop commuting for hours. We only list properties within a 2km radius of your campus. More sleep, less travel.",
+    image: "https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=2670&auto=format&fit=crop",
+    color: "bg-zinc-800",
+    textColor: "text-white",
+    icon: <MapPin className="w-8 h-8" />,
+    stats: ["< 2km Radius", "Walkable", "Safe Routes"]
+  },
+  {
+    id: 5,
+    title: "NOT HOSTEL",
+    subtitle: "FOOD.",
+    description: "Hygiene-checked kitchens and meal plans that actually taste good. We rate the food so you don't have to guess.",
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670&auto=format&fit=crop",
+    color: "bg-orange-500",
+    textColor: "text-white",
+    icon: <Utensils className="w-8 h-8" />,
+    stats: ["Hygiene Rated", "Diverse Menu", "Late Night"]
+  },
+  {
+    id: 6,
+    title: "LIVING ON",
+    subtitle: "AUTOPILOT.",
+    description: "Biometric entry, high-speed WiFi, and app-based issue reporting. Modern living for the modern student.",
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop",
+    color: "bg-emerald-600",
+    textColor: "text-white",
+    icon: <Smartphone className="w-8 h-8" />,
+    stats: ["5G WiFi", "Biometric Lock", "App Support"]
   }
 ];
 
@@ -134,7 +167,7 @@ export default function WhyOrbit() {
               card={card} 
               index={i} 
               progress={scrollYProgress}
-              range={[i * 0.25, 1]}
+              range={[i * (1 / CARDS.length), 1]}
               targetScale={targetScale}
             />
           );
