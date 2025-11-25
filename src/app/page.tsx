@@ -72,8 +72,8 @@ export default function Home() {
 					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
 						{FEATURED_PROPERTIES.map((prop, i) => (
 							<ScrollReveal key={prop.id} delay={0.3 + i * 0.15}>
-								<Link href={`/pg/${prop.slug}`} className='group block relative'>
-									<div className='relative aspect-[3/4] overflow-hidden rounded-2xl bg-zinc-900'>
+								<Link href={`/pg/${prop.slug}`} className='group block relative cursor-pointer' prefetch={true}>
+									<div className='relative aspect-[3/4] overflow-hidden rounded-2xl bg-zinc-900 transition-transform duration-300 active:scale-95'>
 										<img
 											src={prop.image}
 											alt={prop.title}
