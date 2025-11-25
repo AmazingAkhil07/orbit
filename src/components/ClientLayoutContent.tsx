@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { CustomCursor } from '@/components/ui/CustomCursor';
+import { NoiseOverlay } from '@/components/ui/NoiseOverlay';
 
 export function ClientLayoutContent({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
@@ -47,6 +49,8 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
 
     return (
         <>
+            <CustomCursor />
+            <NoiseOverlay />
             {mounted && NavbarComponent ? <NavbarComponent /> : <div className="h-16 border-b border-zinc-800" />}
             <main className="flex-1">
                 {children}

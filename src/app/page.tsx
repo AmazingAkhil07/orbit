@@ -2,6 +2,7 @@ import HeroSection from '@/components/landing/HeroSection';
 import WhyOrbit from '@/components/landing/WhyOrbit';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { Button } from '@/components/ui/button';
+import Magnetic from '@/components/ui/Magnetic';
 import { MapPin, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -59,12 +60,14 @@ export default function Home() {
 
 						<ScrollReveal delay={0.2}>
 							<Link href='/search'>
-								<Button
-									variant='outline'
-									className='rounded-full border-zinc-700 text-white hover:bg-white hover:text-black transition-all h-12 px-8 text-base'
-								>
-									View All Properties
-								</Button>
+								<Magnetic>
+									<Button
+										variant='outline'
+										className='rounded-full border-zinc-700 text-white hover:bg-white hover:text-black transition-all h-12 px-8 text-base'
+									>
+										View All Properties
+									</Button>
+								</Magnetic>
 							</Link>
 						</ScrollReveal>
 					</div>
@@ -140,12 +143,16 @@ export default function Home() {
 								Join thousands of students who found their dream home with Orbit. Verified
 								properties, instant booking, zero hassle.
 							</p>
-							<Button
-								size='lg'
-								className='bg-white text-black hover:bg-zinc-200 rounded-full px-12 h-16 text-xl font-bold transition-all hover:scale-105'
-							>
-								Get Started Now
-							</Button>
+							<div className="flex justify-center">
+								<Magnetic>
+									<Button
+										size='lg'
+										className='bg-white text-black hover:bg-zinc-200 rounded-full px-12 h-16 text-xl font-bold transition-all hover:scale-105'
+									>
+										Get Started Now
+									</Button>
+								</Magnetic>
+							</div>
 						</div>
 					</ScrollReveal>
 				</div>
