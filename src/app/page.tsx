@@ -3,7 +3,7 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Shield, Zap, ArrowRight, Star, Users, Check } from 'lucide-react';
+import { MapPin, Shield, Zap, ArrowRight, Star, Users, Check, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 // Mock Data for Featured Properties
@@ -45,68 +45,63 @@ export default function Home() {
 		<div className='min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black'>
 			<HeroSection />
 
-			{/* Value Proposition Section - Minimal & Grid */}
+			{/* Value Proposition Section - Bento Grid */}
 			<section className='py-32 px-4 border-t border-zinc-900'>
 				<div className='container mx-auto'>
-					<div className='grid grid-cols-1 lg:grid-cols-2 gap-16 items-start'>
-						<ScrollReveal>
-							<h2 className='text-5xl md:text-7xl font-bold tracking-tighter text-white leading-[0.9]'>
-								WE DON'T JUST
-								<br />
-								<span className='text-zinc-500'>LIST ROOMS.</span>
-							</h2>
-							<p className='mt-8 text-xl text-zinc-400 max-w-md leading-relaxed'>
-								We curate experiences. Every property is verified, every review is
-								real, every student is satisfied.
-							</p>
+					<ScrollReveal>
+						<h2 className='text-4xl md:text-6xl font-bold tracking-tighter text-white mb-16'>
+							WHY <span className='text-zinc-600'>ORBIT?</span>
+						</h2>
+					</ScrollReveal>
 
-							<div className='mt-12 grid grid-cols-2 gap-8'>
-								<div>
-									<h3 className='text-4xl font-bold text-white'>500+</h3>
-									<p className='text-zinc-500 mt-1'>Verified PGs</p>
-								</div>
-								<div>
-									<h3 className='text-4xl font-bold text-white'>10K+</h3>
-									<p className='text-zinc-500 mt-1'>Happy Students</p>
+					<div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 h-auto md:h-[600px]'>
+						{/* Large Card */}
+						<ScrollReveal className='md:col-span-2 md:row-span-2 h-full' width='100%'>
+							<div className='group relative h-full w-full bg-zinc-900 rounded-3xl p-8 overflow-hidden border border-zinc-800 hover:border-zinc-700 transition-all'>
+								<div className='absolute inset-0 bg-[url("https://images.unsplash.com/photo-1522771753035-4a50356c6518?q=80&w=2670&auto=format&fit=crop")] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700' />
+								<div className='absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent' />
+								<div className='relative z-10 h-full flex flex-col justify-end'>
+									<h3 className='text-3xl md:text-5xl font-bold text-white mb-4'>
+										100% Verified Listings
+									</h3>
+									<p className='text-zinc-300 text-lg max-w-md'>
+										Every property is physically visited and verified by our expert team. No fake
+										listings, no surprises.
+									</p>
 								</div>
 							</div>
 						</ScrollReveal>
 
-						<div className='grid gap-4'>
-							{[
-								{
-									title: '100% Verified',
-									desc: 'Every property is physically visited and verified by our expert team.',
-								},
-								{
-									title: 'Live Availability',
-									desc: 'See real-time room availability with instant booking.',
-								},
-								{
-									title: 'Hyper Local',
-									desc: 'Built specifically for your campus and city.',
-								},
-							].map((feature, i) => (
-								<ScrollReveal key={i} delay={0.2 + i * 0.1}>
-									<div className='group p-8 border border-zinc-800 hover:bg-zinc-900 transition-colors duration-300'>
-										<div className='flex items-start justify-between mb-4'>
-											<h3 className='text-xl font-bold text-white group-hover:text-white transition-colors'>
-												{feature.title}
-											</h3>
-											<ArrowRight className='w-5 h-5 text-zinc-600 group-hover:text-white transition-colors -rotate-45 group-hover:rotate-0 duration-300' />
-										</div>
-										<p className='text-zinc-500 group-hover:text-zinc-400 transition-colors'>
-											{feature.desc}
-										</p>
-									</div>
-								</ScrollReveal>
-							))}
-						</div>
+						{/* Small Card 1 */}
+						<ScrollReveal className='h-full' width='100%' delay={0.3}>
+							<div className='group relative h-full min-h-[250px] bg-zinc-900 rounded-3xl p-8 border border-zinc-800 hover:bg-zinc-800/50 transition-all flex flex-col justify-between'>
+								<div className='w-12 h-12 bg-white rounded-full flex items-center justify-center'>
+									<Zap className='w-6 h-6 text-black' />
+								</div>
+								<div>
+									<h3 className='text-2xl font-bold text-white mb-2'>Instant Booking</h3>
+									<p className='text-zinc-400'>Skip the wait. Book your room instantly.</p>
+								</div>
+							</div>
+						</ScrollReveal>
+
+						{/* Small Card 2 */}
+						<ScrollReveal className='h-full' width='100%' delay={0.4}>
+							<div className='group relative h-full min-h-[250px] bg-zinc-900 rounded-3xl p-8 border border-zinc-800 hover:bg-zinc-800/50 transition-all flex flex-col justify-between'>
+								<div className='w-12 h-12 bg-white rounded-full flex items-center justify-center'>
+									<MapPin className='w-6 h-6 text-black' />
+								</div>
+								<div>
+									<h3 className='text-2xl font-bold text-white mb-2'>Hyper Local</h3>
+									<p className='text-zinc-400'>Curated specifically for your campus.</p>
+								</div>
+							</div>
+						</ScrollReveal>
 					</div>
 				</div>
 			</section>
 
-			{/* Featured Properties - Horizontal Scroll / Grid */}
+			{/* Featured Properties - Immersive Cards */}
 			<section className='py-32 px-4 border-t border-zinc-900 bg-zinc-950'>
 				<div className='container mx-auto'>
 					<div className='flex flex-col md:flex-row justify-between items-end mb-16 gap-8'>
@@ -121,7 +116,7 @@ export default function Home() {
 							<Link href='/search'>
 								<Button
 									variant='outline'
-									className='rounded-none border-zinc-700 text-white hover:bg-white hover:text-black transition-all h-12 px-8 text-base'
+									className='rounded-full border-zinc-700 text-white hover:bg-white hover:text-black transition-all h-12 px-8 text-base'
 								>
 									View All Properties
 								</Button>
@@ -129,37 +124,52 @@ export default function Home() {
 						</ScrollReveal>
 					</div>
 
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
 						{FEATURED_PROPERTIES.map((prop, i) => (
 							<ScrollReveal key={prop.id} delay={0.3 + i * 0.15}>
-								<Link href={`/pg/${prop.slug}`} className='group block'>
-									<div className='relative aspect-[4/3] overflow-hidden bg-zinc-900 mb-4'>
+								<Link href={`/pg/${prop.slug}`} className='group block relative'>
+									<div className='relative aspect-[3/4] overflow-hidden rounded-2xl bg-zinc-900'>
 										<img
 											src={prop.image}
 											alt={prop.title}
-											className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0'
+											className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-110'
 										/>
-										<div className='absolute top-4 left-4'>
-											<span className='bg-white text-black text-xs font-bold px-2 py-1 uppercase tracking-wider'>
-												{prop.tags[0]}
-											</span>
-										</div>
-									</div>
+										{/* Gradient Overlay - Subtle */}
+										<div className='absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity' />
 
-									<div className='flex justify-between items-start'>
-										<div>
-											<h3 className='text-xl font-bold text-white mb-1 group-hover:underline decoration-zinc-600 underline-offset-4'>
-												{prop.title}
-											</h3>
-											<p className='text-zinc-500 text-sm flex items-center gap-1'>
+										{/* Content Overlay */}
+										<div className='absolute bottom-0 left-0 right-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-300'>
+											<div className='flex justify-between items-end mb-2'>
+												<h3 className='text-2xl font-bold text-white leading-tight'>
+													{prop.title}
+												</h3>
+												<div className='bg-white text-black rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0'>
+													<ArrowUpRight className='w-5 h-5' />
+												</div>
+											</div>
+
+											<p className='text-zinc-300 text-sm flex items-center gap-1 mb-4'>
 												<MapPin className='w-3 h-3' /> {prop.location}
 											</p>
-										</div>
-										<div className='text-right'>
-											<p className='text-lg font-bold text-white'>
-												₹{prop.price.toLocaleString()}
-											</p>
-											<p className='text-xs text-zinc-500'>/month</p>
+
+											<div className='flex items-center justify-between border-t border-white/20 pt-4'>
+												<div className='flex gap-2'>
+													{prop.tags.map((tag) => (
+														<span
+															key={tag}
+															className='text-[10px] uppercase tracking-wider font-bold bg-white/20 backdrop-blur-md px-2 py-1 rounded text-white'
+														>
+															{tag}
+														</span>
+													))}
+												</div>
+												<p className='text-lg font-bold text-white'>
+													₹{prop.price.toLocaleString()}
+													<span className='text-xs font-normal text-zinc-400'>
+														/mo
+													</span>
+												</p>
+											</div>
 										</div>
 									</div>
 								</Link>
@@ -173,7 +183,7 @@ export default function Home() {
 			<section className='py-40 px-4 border-t border-zinc-900 relative overflow-hidden'>
 				<div className='container mx-auto text-center relative z-10'>
 					<ScrollReveal>
-						<h2 className='text-[12vw] leading-[0.8] font-bold tracking-tighter text-zinc-900 select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full pointer-events-none'>
+						<h2 className='text-[15vw] leading-[0.8] font-bold tracking-tighter text-zinc-900 select-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full pointer-events-none'>
 							ORBIT
 						</h2>
 
@@ -182,12 +192,12 @@ export default function Home() {
 								READY TO MOVE IN?
 							</h3>
 							<p className='text-xl text-zinc-400 mb-12 max-w-2xl mx-auto'>
-								Join thousands of students who found their dream home with Orbit.
-								Verified properties, instant booking, zero hassle.
+								Join thousands of students who found their dream home with Orbit. Verified
+								properties, instant booking, zero hassle.
 							</p>
 							<Button
 								size='lg'
-								className='bg-white text-black hover:bg-zinc-200 rounded-full px-12 h-16 text-xl font-bold transition-all'
+								className='bg-white text-black hover:bg-zinc-200 rounded-full px-12 h-16 text-xl font-bold transition-all hover:scale-105'
 							>
 								Get Started Now
 							</Button>

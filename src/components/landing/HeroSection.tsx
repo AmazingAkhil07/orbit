@@ -1,105 +1,142 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Search, MapPin } from 'lucide-react';
+import { Search, MapPin, ArrowUpRight } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function HeroSection() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    
+    const { scrollY } = useScroll();
+    const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+    const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            setMousePosition({
+                x: e.clientX,
+                y: e.clientY
+            });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
     return (
-        <section className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden pt-20 bg-black">
+        <section ref={containerRef} className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden bg-black selection:bg-white selection:text-black">
+            
+            {/* Spotlight Effect */}
+            <div 
+                className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
+                style={{
+                    background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.06), transparent 40%)`
+                }}
+            />
+
+            {/* Animated Grid Background */}
+            <div className="absolute inset-0 z-0 opacity-20">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+                <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-white opacity-20 blur-[100px]" />
+            </div>
+
             {/* Content */}
-            <div className="container mx-auto px-4 relative z-10">
+            <div className="container mx-auto px-4 relative z-40">
                 <div className="max-w-[90vw] mx-auto">
-                    {/* Main Typography */}
+                    {/* Main Typography - Kinetic & Big */}
                     <motion.div
-                        initial={{ opacity: 0, y: 40 }}
+                        initial={{ opacity: 0, y: 100 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="mb-12"
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="mb-12 relative"
                     >
-                        <h1 className="text-[10vw] md:text-[12vw] leading-[0.85] font-bold tracking-tighter text-white mb-4 select-none">
+                        <h1 className="text-[11vw] md:text-[13vw] leading-[0.8] font-bold tracking-tighter text-white mb-4 select-none mix-blend-difference">
                             STUDENT
                             <br />
-                            <span className="text-zinc-600">LIVING.</span>
+                            <span className="text-zinc-700">LIVING.</span>
                             <br />
-                            ELEVATED.
+                            <span className="relative inline-block">
+                                ELEVATED.
+                                <motion.div 
+                                    className="absolute -right-4 md:-right-12 top-2 md:top-8 w-4 h-4 md:w-8 md:h-8 bg-blue-600 rounded-full"
+                                    animate={{ scale: [1, 1.2, 1] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                />
+                            </span>
                         </h1>
                     </motion.div>
 
-                    {/* Search Bar - Floating & Minimal */}
+                    {/* Search Bar - Glass & Blur */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full max-w-2xl"
+                        transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full max-w-2xl relative z-50"
                     >
-                        <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-2 rounded-full flex items-center gap-2 pl-6 pr-2 h-16 group focus-within:border-white/20 transition-colors">
+                        <div className="bg-zinc-900/80 backdrop-blur-2xl border border-white/10 p-2 rounded-full flex items-center gap-2 pl-6 pr-2 h-16 group focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20 transition-all shadow-2xl shadow-black/50">
                             <Search className="w-5 h-5 text-zinc-500 group-focus-within:text-white transition-colors" />
                             <input 
                                 type="text" 
                                 placeholder="Search by college or city..." 
                                 className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-zinc-600 text-lg"
                             />
-                            <Button className="rounded-full h-12 px-8 bg-white text-black hover:bg-zinc-200 font-medium text-base transition-all">
+                            <Button className="rounded-full h-12 px-8 bg-white text-black hover:bg-zinc-200 font-medium text-base transition-all hover:scale-105 active:scale-95">
                                 Search
                             </Button>
                         </div>
                         
                         <div className="mt-6 flex gap-4 text-sm text-zinc-500 font-medium">
-                            <span>Popular:</span>
-                            <button className="hover:text-white transition-colors">Near DSU</button>
-                            <button className="hover:text-white transition-colors">Harohalli</button>
-                            <button className="hover:text-white transition-colors">Bangalore South</button>
+                            <span>Trending:</span>
+                            {['Near DSU', 'Koramangala', 'Electronic City'].map((item) => (
+                                <button key={item} className="hover:text-white transition-colors underline decoration-zinc-800 hover:decoration-white underline-offset-4">
+                                    {item}
+                                </button>
+                            ))}
                         </div>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Decorative Elements - Abstract 3D Cards */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[40vw] h-[80vh] hidden lg:block pointer-events-none">
-                <motion.div
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, delay: 0.4 }}
-                    className="relative w-full h-full"
+            {/* Decorative Elements - Parallax Cards */}
+            <div className="absolute right-0 top-0 h-full w-[45vw] hidden lg:block pointer-events-none z-10">
+                {/* Floating Card 1 */}
+                <motion.div 
+                    style={{ y: y1 }}
+                    className="absolute top-[15%] right-[15%] w-72 aspect-[3/4] bg-zinc-900 rounded-xl border border-white/10 overflow-hidden shadow-2xl rotate-[-6deg]"
                 >
-                    {/* Card 1 */}
-                    <div className="absolute top-10 right-20 w-64 h-80 bg-zinc-900 border border-zinc-800 rounded-xl p-4 transform rotate-6 opacity-40">
-                        <div className="w-full h-40 bg-zinc-800 rounded-lg mb-4" />
-                        <div className="w-3/4 h-4 bg-zinc-800 rounded mb-2" />
-                        <div className="w-1/2 h-4 bg-zinc-800 rounded" />
+                    <img 
+                        src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069&auto=format&fit=crop" 
+                        alt="Modern Interior" 
+                        className="w-full h-full object-cover opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                        <p className="text-white font-bold text-lg">The Loft</p>
+                        <p className="text-zinc-400 text-sm">₹12,000/mo</p>
                     </div>
-                    
-                    {/* Card 2 */}
-                    <div className="absolute top-40 right-40 w-72 h-96 bg-zinc-900 border border-zinc-800 rounded-xl p-4 transform -rotate-3 opacity-60 z-10">
-                        <div className="w-full h-48 bg-zinc-800 rounded-lg mb-4" />
-                        <div className="w-3/4 h-4 bg-zinc-800 rounded mb-2" />
-                        <div className="w-1/2 h-4 bg-zinc-800 rounded" />
-                    </div>
+                </motion.div>
 
-                    {/* Card 3 - Main */}
-                    <div className="absolute top-60 right-10 w-80 h-[28rem] bg-zinc-950 border border-zinc-800 rounded-xl p-4 transform rotate-2 z-20 shadow-2xl">
-                        <div className="w-full h-64 bg-zinc-900 rounded-lg mb-6 overflow-hidden relative">
-                            <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
-                            <div className="absolute bottom-4 left-4 bg-white text-black text-xs font-bold px-2 py-1 rounded">
-                                VERIFIED
+                {/* Floating Card 2 */}
+                <motion.div 
+                    style={{ y: y2 }}
+                    className="absolute top-[40%] right-[5%] w-80 aspect-[3/4] bg-zinc-900 rounded-xl border border-white/10 overflow-hidden shadow-2xl rotate-[3deg] z-20"
+                >
+                    <img 
+                        src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=2070&auto=format&fit=crop" 
+                        alt="Student Housing" 
+                        className="w-full h-full object-cover opacity-90"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                    <div className="absolute bottom-4 left-4 flex justify-between items-end w-[calc(100%-2rem)]">
+                        <div>
+                            <p className="text-white font-bold text-lg">Urban Stay</p>
+                            <div className="flex items-center gap-1 text-zinc-400 text-xs mt-1">
+                                <MapPin className="w-3 h-3" /> 0.5km to Campus
                             </div>
                         </div>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="text-white font-bold text-lg">Premium Student Suite</h3>
-                                    <p className="text-zinc-500 text-sm flex items-center gap-1">
-                                        <MapPin className="w-3 h-3" /> 5 mins from Campus
-                                    </p>
-                                </div>
-                                <span className="text-white font-bold">₹8,500<span className="text-zinc-600 text-xs font-normal">/mo</span></span>
-                            </div>
-                            <div className="flex gap-2 pt-2">
-                                <span className="px-2 py-1 rounded border border-zinc-800 text-xs text-zinc-400">WiFi</span>
-                                <span className="px-2 py-1 rounded border border-zinc-800 text-xs text-zinc-400">AC</span>
-                                <span className="px-2 py-1 rounded border border-zinc-800 text-xs text-zinc-400">Food</span>
-                            </div>
+                        <div className="bg-white text-black rounded-full p-2">
+                            <ArrowUpRight className="w-4 h-4" />
                         </div>
                     </div>
                 </motion.div>
