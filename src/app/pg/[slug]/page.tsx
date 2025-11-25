@@ -17,7 +17,6 @@ export const revalidate = 0;
 // Helper function to ensure we have 4 valid images with fallbacks
 function ensureValidImages(property: any) {
     // Use Unsplash images for reliable fallbacks
-    // Different images ensure variety
     const placeholders = [
         'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1522771753035-4a53c9d1314f?q=80&w=2070&auto=format&fit=crop',
@@ -25,17 +24,26 @@ function ensureValidImages(property: any) {
         'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop'
     ];
 
-    // Ensure we have at least 4 images
-    const images = property.media?.images || [];
-    while (images.length < 4) {
-        images.push(placeholders[images.length]);
+    // Filter out invalid images first
+    let images = Array.isArray(property.media?.images) 
+        ? property.media.images.filter((img: any) => img && typeof img === 'string' && img.startsWith('http'))
+        : [];
+
+    // Fill with placeholders if needed
+    if (images.length < 4) {
+        const needed = 4 - images.length;
+        for (let i = 0; i < needed; i++) {
+            // Use modulo to cycle through placeholders if we need more than available (though we have 4)
+            // And offset by existing images count to avoid duplicates if possible
+            images.push(placeholders[(images.length + i) % placeholders.length]);
+        }
     }
 
     return {
         ...property,
         media: {
             ...property.media,
-            images: images.slice(0, 4) // Ensure exactly 4 images
+            images: images
         }
     };
 }
