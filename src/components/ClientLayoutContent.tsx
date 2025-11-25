@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Lenis from 'lenis';
 
 export function ClientLayoutContent({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = useState(false);
@@ -8,6 +9,15 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
     const [ChatComponent, setChatComponent] = useState<any>(null);
 
     useEffect(() => {
+        const lenis = new Lenis();
+
+        function raf(time: number) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
         const loadComponents = async () => {
             try {
                 const navbar = await import('@/components/Navbar').then(m => m.Navbar);
@@ -21,6 +31,10 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
         };
 
         loadComponents();
+
+        return () => {
+            lenis.destroy();
+        };
     }, []);
 
     return (
