@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import HeroSection from '@/components/landing/HeroSection';
 import WhyOrbit from '@/components/landing/WhyOrbit';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
@@ -75,12 +74,10 @@ export default function Home() {
 							<ScrollReveal key={prop.id} delay={0.3 + i * 0.15}>
 								<Link href={`/pg/${prop.slug}`} className='group block relative cursor-pointer' prefetch={true}>
 									<div className='relative aspect-[3/4] overflow-hidden rounded-2xl bg-zinc-900 transition-transform duration-300 active:scale-95'>
-										<Image
+										<img
 											src={prop.image}
 											alt={prop.title}
-											fill
-											className='object-cover transition-transform duration-700 group-hover:scale-110'
-											sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+											className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-110'
 										/>
 										{/* Gradient Overlay - Subtle */}
 										<div className='absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity' />
