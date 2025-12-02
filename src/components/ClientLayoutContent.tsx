@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Lenis from 'lenis';
 import { CustomCursor } from '@/components/ui/CustomCursor';
 import { NoiseOverlay } from '@/components/ui/NoiseOverlay';
@@ -11,6 +12,8 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
     const [mounted, setMounted] = useState(false);
     const [NavbarComponent, setNavbarComponent] = useState<any>(null);
     const [ChatComponent, setChatComponent] = useState<any>(null);
+    const pathname = usePathname();
+    const isAdmin = pathname?.startsWith('/admin');
 
     useEffect(() => {
         const lenis = new Lenis({
@@ -54,12 +57,12 @@ export function ClientLayoutContent({ children }: { children: React.ReactNode })
             {mounted && <Preloader />}
             {mounted && <CustomCursor />}
             {mounted && <NoiseOverlay />}
-            {mounted && NavbarComponent ? <NavbarComponent /> : <div className="h-16 border-b border-zinc-800" />}
+            {mounted && !isAdmin && (NavbarComponent ? <NavbarComponent /> : <div className="h-16 border-b border-zinc-800" />)}
             <main className="flex-1">
                 {children}
             </main>
-            <Footer />
-            {mounted && ChatComponent && <ChatComponent />}
+            {!isAdmin && <Footer />}
+            {mounted && !isAdmin && ChatComponent && <ChatComponent />}
         </>
     );
 }
