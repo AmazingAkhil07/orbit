@@ -22,18 +22,33 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* Subtle Grid Background */}
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-20">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:40px_40px]" />
+    <div className="min-h-screen bg-black text-zinc-100 selection:bg-white selection:text-black font-sans antialiased">
+      {/* Background Effects */}
+      {/* Deep Space Background Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Base Gradient */}
+        <div className="absolute inset-0 bg-black" />
+
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20" />
+
+        {/* Glowing Orbs */}
+        <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-blue-600/20 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-purple-600/20 blur-[120px] animate-pulse delay-1000" />
+        <div className="absolute top-[40%] left-[60%] h-[300px] w-[300px] rounded-full bg-emerald-600/10 blur-[100px] animate-pulse delay-700" />
+
+        {/* Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
-      <AdminNav />
-      <main className="relative z-10 container mx-auto px-4 py-8">
-        <div style={{ display: 'block', visibility: 'visible' }}>
-          {children}
-        </div>
-      </main>
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <AdminNav />
+        <main className="flex-1 container mx-auto px-4 py-8 md:px-6 lg:px-8 max-w-7xl">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

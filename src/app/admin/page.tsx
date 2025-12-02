@@ -1,4 +1,4 @@
-import { Users, Home, ShoppingCart, TrendingUp, BarChart3, Shield, Zap, Lock, User as UserIcon, CheckCircle2, Mail, ExternalLink } from 'lucide-react';
+import { Users, Home, ShoppingCart, TrendingUp, BarChart3, Shield, Zap, Lock, User as UserIcon, CheckCircle2, Mail, ExternalLink, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
@@ -7,6 +7,7 @@ import User from '@/models/User';
 import Property from '@/models/Property';
 import Booking from '@/models/Booking';
 import { Badge } from '@/components/ui/badge';
+import { GlassCard } from '@/components/admin/ui/GlassCard';
 
 async function getAdminStats() {
   try {
@@ -89,8 +90,14 @@ export default async function AdminDashboard() {
 
   if (!stats || error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-slate-400">{error || 'Failed to load dashboard data'}</p>
+      <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-500">
+        <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
+          <Shield className="w-8 h-8 text-red-500" />
+        </div>
+        <p className="text-zinc-400 text-lg">{error || 'Failed to load dashboard data'}</p>
+        <button className="mt-4 px-6 py-2 bg-white text-black rounded-full font-medium hover:bg-zinc-200 transition-colors">
+          Retry Connection
+        </button>
       </div>
     );
   }
@@ -100,25 +107,29 @@ export default async function AdminDashboard() {
       title: 'Total Users',
       value: stats.totalUsers,
       description: `${stats.studentCount} students, ${stats.ownerCount} owners`,
-      icon: <Users className="w-5 h-5" />,
+      icon: Users,
+      color: 'blue',
     },
     {
       title: 'Properties',
       value: stats.totalProperties,
       description: `${stats.approvedProperties} approved, ${stats.pendingProperties} pending`,
-      icon: <Home className="w-5 h-5" />,
+      icon: Home,
+      color: 'purple',
     },
     {
       title: 'Bookings',
       value: stats.totalBookings,
       description: `${stats.paidBookings} paid, ${stats.thisMonthBookings} this month`,
-      icon: <ShoppingCart className="w-5 h-5" />,
+      icon: ShoppingCart,
+      color: 'emerald',
     },
     {
       title: 'Revenue',
       value: `₹${(stats.totalRevenue / 100000).toFixed(1)}L`,
       description: 'Total from paid bookings',
-      icon: <TrendingUp className="w-5 h-5" />,
+      icon: TrendingUp,
+      color: 'orange',
     },
   ];
 
@@ -126,156 +137,185 @@ export default async function AdminDashboard() {
     {
       title: 'User Management',
       description: 'Control user roles, verify accounts, and manage blacklists',
-      icon: <Users className="w-8 h-8" />,
+      icon: Users,
       href: '/admin/users',
-      color: 'from-blue-500 to-blue-600',
-      delay: '0ms',
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20',
     },
     {
       title: 'Property Control',
       description: 'Approve, reject, or manage all properties on the platform',
-      icon: <Home className="w-8 h-8" />,
+      icon: Home,
       href: '/admin/properties',
-      color: 'from-purple-500 to-purple-600',
-      delay: '100ms',
+      color: 'text-purple-400',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
     },
     {
       title: 'Booking Analytics',
       description: 'Track bookings, payments, and rental activities',
-      icon: <ShoppingCart className="w-8 h-8" />,
+      icon: ShoppingCart,
       href: '/admin/bookings',
-      color: 'from-green-500 to-green-600',
-      delay: '200ms',
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
     },
     {
       title: 'Performance Metrics',
       description: 'Detailed analytics and platform performance insights',
-      icon: <BarChart3 className="w-8 h-8" />,
+      icon: BarChart3,
       href: '/admin/analytics',
-      color: 'from-orange-500 to-orange-600',
-      delay: '300ms',
+      color: 'text-orange-400',
+      bg: 'bg-orange-500/10',
+      border: 'border-orange-500/20',
     },
     {
       title: 'Security',
       description: 'Manage security settings and monitor platform safety',
-      icon: <Shield className="w-8 h-8" />,
+      icon: Shield,
       href: '/admin/users',
-      color: 'from-red-500 to-red-600',
-      delay: '400ms',
+      color: 'text-red-400',
+      bg: 'bg-red-500/10',
+      border: 'border-red-500/20',
     },
     {
       title: 'System Performance',
       description: 'Monitor system health and optimize platform resources',
-      icon: <Zap className="w-8 h-8" />,
+      icon: Zap,
       href: '/admin',
-      color: 'from-yellow-500 to-yellow-600',
-      delay: '500ms',
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/20',
     },
   ];
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="space-y-8">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Command Center</h1>
-          <p className="text-zinc-400 mt-1">Platform overview and management controls</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-bold text-white tracking-tight font-heading">Command Center</h1>
+          <p className="text-zinc-400 text-lg">Platform overview and management controls</p>
         </div>
 
         {adminUser && (
-          <div className="flex items-center gap-3 bg-zinc-900/50 border border-zinc-800 rounded-full px-4 py-2">
-            <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
-              {adminUser.image ? (
-                <img src={adminUser.image} alt={adminUser.name || 'Admin'} className="w-full h-full rounded-full object-cover" />
-              ) : (
-                <UserIcon className="w-4 h-4 text-zinc-400" />
-              )}
+          <GlassCard className="flex items-center gap-4 p-2 pr-6 cursor-pointer group rounded-full border-white/10 hover:border-white/20">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-[1px]">
+              <div className="w-full h-full rounded-full overflow-hidden bg-black">
+                {adminUser.image ? (
+                  <img src={adminUser.image} alt={adminUser.name || 'Admin'} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+                    <UserIcon className="w-6 h-6 text-zinc-400" />
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-sm">
-              <p className="text-white font-medium leading-none">{adminUser.name || 'Admin'}</p>
-              <p className="text-zinc-500 text-xs leading-none mt-1">Administrator</p>
+            <div>
+              <p className="text-white font-bold leading-none group-hover:text-blue-400 transition-colors">{adminUser.name || 'Admin'}</p>
+              <p className="text-zinc-500 text-xs font-medium uppercase tracking-wider mt-1.5">Administrator</p>
             </div>
-          </div>
+          </GlassCard>
         )}
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statsData.map((stat, idx) => (
-          <div key={idx} className="bg-zinc-950 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors group">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-zinc-900 rounded-lg text-zinc-400 group-hover:text-white transition-colors">
-                {stat.icon}
+          <GlassCard
+            key={idx}
+            className="p-6 group hover:-translate-y-1"
+          >
+            <div className={`absolute top-0 right-0 w-32 h-32 bg-${stat.color}-500/10 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-${stat.color}-500/20`} />
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <div className={`p-3 rounded-2xl bg-${stat.color}-500/10 text-${stat.color}-500 group-hover:scale-110 transition-transform duration-300`}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider bg-white/5 px-2 py-1 rounded-full border border-white/5">Metric</span>
               </div>
-              <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Metric</span>
+              <p className="text-4xl font-bold text-white tracking-tight mb-2 font-heading">{stat.value}</p>
+              <p className="text-sm text-zinc-400 font-medium">{stat.description}</p>
             </div>
-            <p className="text-3xl font-bold text-white tracking-tight mb-1">{stat.value}</p>
-            <p className="text-sm text-zinc-500">{stat.description}</p>
-          </div>
+          </GlassCard>
         ))}
       </div>
 
       {/* Services Grid */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Zap className="w-4 h-4 text-zinc-400" />
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3 font-heading">
+          <div className="p-2 bg-yellow-500/10 rounded-lg">
+            <Zap className="w-5 h-5 text-yellow-500" />
+          </div>
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, idx) => (
-            <Link key={idx} href={service.href}>
-              <div className="h-full bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 hover:bg-zinc-900/50 hover:border-zinc-700 transition-all cursor-pointer group">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="p-2 bg-zinc-950 border border-zinc-800 rounded-lg text-zinc-400 group-hover:text-white group-hover:border-zinc-700 transition-all">
-                    {service.icon}
+            <Link key={idx} href={service.href} className="group block h-full">
+              <GlassCard className="h-full p-6 relative overflow-hidden">
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-transparent via-transparent to-${service.color.split('-')[1]}-500/10`} />
+
+                <div className="relative z-10 flex items-start justify-between mb-4">
+                  <div className={`p-3 rounded-2xl ${service.bg} ${service.border} ${service.color} border group-hover:scale-110 transition-transform duration-300`}>
+                    <service.icon className="w-6 h-6" />
                   </div>
-                  <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors border border-white/5">
+                    <ExternalLink className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
+                  </div>
                 </div>
-                <h3 className="text-base font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors">{service.title}</h3>
-                <p className="text-sm text-zinc-500 line-clamp-2">{service.description}</p>
-              </div>
+
+                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors font-heading">{service.title}</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">{service.description}</p>
+              </GlassCard>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Recent Activity & System Status */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+        {/* Recent Bookings */}
+        <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-zinc-400" />
+            <h2 className="text-xl font-bold text-white flex items-center gap-3 font-heading">
+              <div className="p-2 bg-emerald-500/10 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-emerald-500" />
+              </div>
               Recent Bookings
             </h2>
-            <Link href="/admin/bookings" className="text-sm text-zinc-500 hover:text-white transition-colors">
-              View All
+            <Link href="/admin/bookings" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group">
+              View All <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
 
-          <div className="bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden">
+          <GlassCard className="overflow-hidden">
             {recentBookings.length === 0 ? (
-              <div className="text-center py-12">
-                <Lock className="w-8 h-8 text-zinc-700 mx-auto mb-3" />
-                <p className="text-zinc-500">No bookings recorded yet</p>
+              <div className="text-center py-16">
+                <div className="w-16 h-16 bg-zinc-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Lock className="w-8 h-8 text-zinc-600" />
+                </div>
+                <p className="text-zinc-500 font-medium">No bookings recorded yet</p>
               </div>
             ) : (
-              <div className="divide-y divide-zinc-800">
+              <div className="divide-y divide-white/5">
                 {recentBookings.map((booking: any) => (
-                  <div key={booking._id.toString()} className="p-4 flex items-center justify-between hover:bg-zinc-900/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-zinc-800">
-                        <Home className="w-5 h-5 text-zinc-500" />
+                  <div key={booking._id.toString()} className="p-5 flex items-center justify-between hover:bg-white/5 transition-colors group">
+                    <div className="flex items-center gap-5">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center border border-white/5 group-hover:border-white/10 transition-colors">
+                        <Home className="w-6 h-6 text-zinc-500 group-hover:text-white transition-colors" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white">{booking.propertyId?.title || 'Unknown Property'}</p>
-                        <p className="text-xs text-zinc-500">{booking.studentId?.name || 'Unknown Student'}</p>
+                        <p className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">{booking.propertyId?.title || 'Unknown Property'}</p>
+                        <p className="text-sm text-zinc-500">{booking.studentId?.name || 'Unknown Student'}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-white">₹{booking.amountPaid.toLocaleString()}</p>
+                      <p className="text-base font-bold text-white font-mono">₹{booking.amountPaid.toLocaleString()}</p>
                       <Badge
                         variant="outline"
-                        className={`mt-1 text-[10px] uppercase tracking-wider border-0 ${booking.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
+                        className={`mt-1.5 text-[10px] uppercase tracking-wider border-0 px-2.5 py-0.5 ${booking.status === 'paid' ? 'bg-emerald-500/10 text-emerald-500' :
                           booking.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
                             'bg-zinc-500/10 text-zinc-500'
                           }`}
@@ -287,40 +327,48 @@ export default async function AdminDashboard() {
                 ))}
               </div>
             )}
-          </div>
+          </GlassCard>
         </div>
 
         {/* System Status */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Shield className="w-4 h-4 text-zinc-400" />
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold text-white flex items-center gap-3 font-heading">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <Shield className="w-5 h-5 text-blue-500" />
+            </div>
             System Status
           </h2>
-          <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-400">Database</span>
-              <span className="flex items-center gap-2 text-xs font-medium text-emerald-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Operational
-              </span>
+          <GlassCard className="p-6 space-y-6">
+            {[
+              { label: 'Database', status: 'Operational', color: 'emerald' },
+              { label: 'API Gateway', status: 'Operational', color: 'emerald' },
+              { label: 'Storage', status: 'Operational', color: 'emerald' },
+              { label: 'Auth System', status: 'Operational', color: 'emerald' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center justify-between group">
+                <span className="text-sm font-medium text-zinc-400 group-hover:text-white transition-colors">{item.label}</span>
+                <span className={`flex items-center gap-2 text-xs font-bold text-${item.color}-500 bg-${item.color}-500/10 px-3 py-1 rounded-full border border-${item.color}-500/20`}>
+                  <span className={`w-1.5 h-1.5 rounded-full bg-${item.color}-500 animate-pulse`}></span>
+                  {item.status}
+                </span>
+              </div>
+            ))}
+
+            <div className="pt-6 border-t border-white/5">
+              <div className="flex items-center justify-between text-xs text-zinc-500">
+                <span>Last check</span>
+                <span className="font-mono">Just now</span>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-400">API Gateway</span>
-              <span className="flex items-center gap-2 text-xs font-medium text-emerald-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Operational
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-400">Storage</span>
-              <span className="flex items-center gap-2 text-xs font-medium text-emerald-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Operational
-              </span>
-            </div>
-            <div className="pt-4 border-t border-zinc-800">
-              <p className="text-xs text-zinc-500">Last check: Just now</p>
-            </div>
+          </GlassCard>
+
+          {/* Pro Tip Card */}
+          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/20 rounded-3xl p-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-blue-500/30" />
+            <h3 className="text-white font-bold mb-2 relative z-10 font-heading">Pro Tip</h3>
+            <p className="text-sm text-blue-200/80 relative z-10">
+              Use <span className="text-white font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/10">Cmd + K</span> to quickly access the command palette and navigate anywhere.
+            </p>
           </div>
         </div>
       </div>

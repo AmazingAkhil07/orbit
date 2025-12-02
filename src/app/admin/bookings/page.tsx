@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { GlassCard } from '@/components/admin/ui/GlassCard';
+import { GlassTable, GlassTableHeader, GlassTableBody, GlassTableRow, GlassTableHead, GlassTableCell } from '@/components/admin/ui/GlassTable';
+import { PageHeader } from '@/components/admin/ui/PageHeader';
 import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Search, Filter } from 'lucide-react';
 
 interface Booking {
   _id: string;
@@ -72,90 +73,91 @@ export default function AdminBookingsPage() {
   ];
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Bookings Management</h1>
-          <p className="text-zinc-400 mt-1">View and manage all bookings</p>
-        </div>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        title="Bookings Management"
+        description="View and manage all bookings across the platform"
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((stat, i) => (
-          <div key={i} className="bg-zinc-950 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors">
-            <p className="text-zinc-500 text-sm mb-2 font-medium uppercase tracking-wider">{stat.label}</p>
-            <p className="text-3xl font-bold text-white tracking-tight">{stat.value}</p>
-          </div>
+          <GlassCard key={i} className="p-6">
+            <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">{stat.label}</p>
+            <p className="text-3xl font-bold text-white tracking-tight font-heading">{stat.value}</p>
+          </GlassCard>
         ))}
       </div>
 
-      {/* Search */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-6">
-        <Input
-          placeholder="Search by student name, email, or property..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 transition-colors text-white placeholder:text-zinc-600"
-        />
-      </div>
+      {/* Search & Filter Bar */}
+      <GlassCard className="p-4 flex items-center gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder="Search by student name, email, or property..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-zinc-900/50 border-zinc-800 hover:border-zinc-700 focus:border-blue-500/50 transition-all text-white placeholder:text-zinc-600 pl-10 h-10 rounded-xl"
+          />
+        </div>
+        <button className="p-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+          <Filter className="w-4 h-4" />
+        </button>
+      </GlassCard>
 
       {/* Bookings Table */}
-      <div className="bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden">
-        <div className="p-6 border-b border-zinc-800">
-          <h2 className="text-lg font-semibold text-white">{filtered.length} Bookings</h2>
+      <GlassCard className="overflow-hidden">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-white font-heading">{filtered.length} Bookings Found</h2>
         </div>
         <div>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-zinc-500">No bookings found</p>
+            <div className="text-center py-20">
+              <p className="text-zinc-500">No bookings found matching your search</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-zinc-800 bg-zinc-900/50">
-                    <th className="text-left py-4 px-6 text-zinc-400 font-medium text-sm">Student</th>
-                    <th className="text-left py-4 px-6 text-zinc-400 font-medium text-sm">Property</th>
-                    <th className="text-left py-4 px-6 text-zinc-400 font-medium text-sm">Amount</th>
-                    <th className="text-left py-4 px-6 text-zinc-400 font-medium text-sm">Status</th>
-                    <th className="text-left py-4 px-6 text-zinc-400 font-medium text-sm">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((booking) => (
-                    <tr key={booking._id} className="border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors">
-                      <td className="py-4 px-6">
-                        <div>
-                          <p className="text-white font-medium">{booking.studentId?.name || 'N/A'}</p>
-                          <p className="text-zinc-500 text-sm">{booking.studentId?.email}</p>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-zinc-300">{booking.propertyId?.title || 'N/A'}</td>
-                      <td className="py-4 px-6 text-white font-medium">
-                        ₹{booking.amountPaid.toLocaleString()}
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>
-                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6 text-zinc-500 text-sm">
-                        {new Date(booking.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <GlassTable>
+              <GlassTableHeader>
+                <GlassTableRow>
+                  <GlassTableHead>Student</GlassTableHead>
+                  <GlassTableHead>Property</GlassTableHead>
+                  <GlassTableHead>Amount</GlassTableHead>
+                  <GlassTableHead>Status</GlassTableHead>
+                  <GlassTableHead>Date</GlassTableHead>
+                </GlassTableRow>
+              </GlassTableHeader>
+              <GlassTableBody>
+                {filtered.map((booking) => (
+                  <GlassTableRow key={booking._id}>
+                    <GlassTableCell>
+                      <div>
+                        <p className="text-white font-medium">{booking.studentId?.name || 'N/A'}</p>
+                        <p className="text-zinc-500 text-xs">{booking.studentId?.email}</p>
+                      </div>
+                    </GlassTableCell>
+                    <GlassTableCell className="text-zinc-300">{booking.propertyId?.title || 'N/A'}</GlassTableCell>
+                    <GlassTableCell className="text-white font-medium font-mono">
+                      ₹{booking.amountPaid.toLocaleString()}
+                    </GlassTableCell>
+                    <GlassTableCell>
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold border ${getStatusColor(booking.status)}`}>
+                        {booking.status}
+                      </span>
+                    </GlassTableCell>
+                    <GlassTableCell className="text-zinc-500 text-sm">
+                      {new Date(booking.createdAt).toLocaleDateString()}
+                    </GlassTableCell>
+                  </GlassTableRow>
+                ))}
+              </GlassTableBody>
+            </GlassTable>
           )}
         </div>
-      </div>
+      </GlassCard>
     </div>
   );
 }
