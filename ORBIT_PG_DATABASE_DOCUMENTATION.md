@@ -1,9 +1,9 @@
 # 🏠 Orbit PG Database - Complete Documentation & Implementation Guide
 
 **Project**: Student Housing Marketplace (DSU & Jain University)  
-**Status**: 65% Complete (Up from 60%)  
-**Date**: November 25, 2025  
-**Latest Update**: Session 3 - Avatar Upload, Routing Fixes, Hydration Issues Resolved  
+**Status**: 80% Complete (Up from 75%)  
+**Date**: December 5, 2025  
+**Latest Update**: Session 5 - Owner Dashboard UI Complete (70%), Admin View Owner Dashboard Feature  
 **Tech Stack**: Next.js 16.0.3 + MongoDB + TypeScript + Tailwind CSS
 
 ---
@@ -11,19 +11,20 @@
 ## 📋 Table of Contents
 
 1. [Executive Summary](#executive-summary)
-2. [Current Architecture](#current-architecture)
-3. [What's Implemented](#whats-implemented)
-4. [Session 3 Updates](#session-3-updates)
-5. [What's Missing](#whats-missing)
-6. [Implementation Roadmap](#implementation-roadmap)
-7. [Database Schema](#database-schema)
-8. [API Endpoints](#api-endpoints)
-9. [Tech Recommendations](#tech-recommendations)
-10. [Environment Variables](#environment-variables)
-11. [Implementation Checklist](#implementation-checklist)
-12. [Cost Analysis](#cost-analysis)
-13. [Success Metrics](#success-metrics)
-14. [Limitations & Known Issues](#limitations--known-issues)
+2. [Product Requirement Document (PRD)](#product-requirement-document-prd)
+3. [Current Architecture](#current-architecture)
+4. [What's Implemented](#whats-implemented)
+5. [Session 3 Updates](#session-3-updates)
+6. [What's Missing](#whats-missing)
+7. [Implementation Roadmap](#implementation-roadmap)
+8. [Database Schema](#database-schema)
+9. [API Endpoints](#api-endpoints)
+10. [Tech Recommendations](#tech-recommendations)
+11. [Environment Variables](#environment-variables)
+12. [Implementation Checklist](#implementation-checklist)
+13. [Cost Analysis](#cost-analysis)
+14. [Success Metrics](#success-metrics)
+15. [Limitations & Known Issues](#limitations--known-issues)
 
 ---
 
@@ -32,13 +33,17 @@
 **Orbit** is a PG/hostel marketplace connecting students with property owners in Bangalore (DSU, Jain University areas).
 
 ### Current State
-- ✅ **65% Complete**: Core features + Admin system + Avatar upload working
+- ✅ **80% Complete**: Core features + Advanced admin system + Full authentication + Owner Dashboard UI (70%)
 - ✅ Landing page, search, property details functional
-- ✅ Authentication system live (Auth0 + NextAuth)
+- ✅ Authentication system live (Auth0 + NextAuth with role-based access)
 - ✅ AI Chatbot working (Gemini 2.0)
 - ✅ Review system implemented
-- ✅ **Admin Dashboard COMPLETE** - Stats, user management, property approval
-- ✅ **User Verification System** - Email verification, blacklist management
+- ✅ **Admin Dashboard COMPLETE** - Stats, user management, property approval, profile, 2FA
+- ✅ **User Verification System** - Email verification, blacklist management with dedicated page
+- ✅ **Two-Factor Authentication (2FA)** - TOTP-based security for admins using speakeasy
+- ✅ **Audit Logs System** - Comprehensive tracking of all admin actions with CSV export
+- ✅ **Admin Profile Management** - Edit profile, change password, avatar upload
+- ✅ **Admin Bookings View** - Track all bookings with status
 - ✅ **Icon-based UI** - Enhanced visual indicators for status
 - ✅ **Rupee pricing** - All prices displayed in ₹ format
 - ✅ **Property Image Gallery** - Working 4-image gallery system
@@ -48,22 +53,630 @@
 - ✅ **Dropdown Auto-close** - Menu closes on navigation
 - ✅ **Hydration Fixes** - All hydration errors resolved (suppressHydrationWarning)
 - ✅ **Avatar Upload** - Admin profile picture with Cloudinary
-- ✅ **Sign-in Redirect** - After login, users go to home page
-- ✅ **Browser Extension Support** - All buttons compatible with form fillers (suppressHydrationWarning)
-- ✅ **Avatar Upload Feature** - Admin can change profile picture via Cloudinary
-- ✅ **Sign-in Redirect Fixed** - After login, users go to home page (not dashboard)
 - ✅ **Browser Extension Compatibility** - All buttons compatible with form fillers
-- ❌ Payment system incomplete
-- ❌ Owner dashboard missing
-- ❌ Advanced file upload system missing
+- ✅ **Owner Dashboard UI (70% Complete)** - Dashboard, properties list, add property wizard with 7-step form
+- ✅ **Admin View Owner Dashboard** - Admins can view owner dashboards from Users > Owners section
+- ✅ **Unified Authentication** - Single sign-in with auto-detection of user vs owner role
+- ✅ **Emerald Theme for Owners** - Custom green/emerald design system for owner interface
+- ❌ Payment system incomplete (Razorpay not integrated)
+- ⏳ Owner Dashboard Backend API (Frontend 100%, Backend 0%)
+- ❌ Roommate Tinder/Matching system not yet started (NEW FEATURE)
 
 ### Key Metrics
-- **Database Models**: 4 (User, Property, Booking, Review)
-- **Pages**: 8 main pages (+ 5 admin pages)
-- **API Routes**: 20+ endpoints (+ 7 admin endpoints)
-- **Users**: 2 verified admin accounts
-- **Properties**: Seeded with sample data
-- **Admin Features**: 10+ (stats, user verification, property approval, etc)
+- **Database Models**: 5 (User, Property, Booking, Review, AuditLog)
+- **Pages**: 8 main pages (+ 8 admin pages)
+- **API Routes**: 30+ endpoints (+ 15 admin endpoints)
+- **Users**: Multi-admin support with role-based access
+- **Properties**: Auto-seeded with 4 sample properties
+- **Admin Features**: 16+ (stats, user management, 2FA, audit logs, blacklist, profile, owner dashboard view, etc)
+- **Completion**: 80% (core + admin system + owner dashboard UI complete, backend API & payment pending)
+
+---
+
+## Product Requirement Document (PRD): Orbit Student Housing Marketplace
+
+**Project Name:** Orbit Student Housing Platform (Internal Code: *Project Shelter*)  
+**Client:** Circle13 Venture Partners  
+**Target Market:** Students of DSU (Harohalli), Jain University, and PG Owners in the Harohalli Region  
+**Document Version:** 2.0 (Professional Edition)  
+**Status:** Ready for Implementation  
+**Document Date:** November 26, 2025  
+**Classification:** Confidential - For Client Review
+
+---
+
+### 1. Executive Summary & Market Opportunity
+
+#### Problem Definition
+The Harohalli area presents a critical gap in student housing solutions. With the expansion of DSU and Jain University campuses, approximately **5,000+ students** are relocating to an industrial area with:
+
+- **Information Asymmetry:** 70% of students lack reliable housing information before arrival
+- **Trust Deficiency:** Generic platforms like MagicBricks and NoBroker do not address student-specific concerns
+- **Broker Inefficiency:** Traditional brokers charge **1 month's rent (33% markup)**, creating unnecessary cost barriers
+- **Safety & Accessibility Concerns:** Limited information on proximity to college, safety metrics, and essential amenities
+
+#### Solution Overview
+**Orbit** is a hyper-localized, verified marketplace connecting students with pre-vetted PG owners. The platform leverages:
+- **Advanced verification protocols** (offline KYC, ID verification, physical property audits)
+- **Technology integration** (360° virtual tours, location-based navigation, WhatsApp bot integration)
+- **Transparent pricing model** (zero-brokerage for students, marketplace revenue via subscription and booking fees)
+- **Data-driven quality assurance** (sentiment analysis, blacklist management, audit trails)
+
+#### Market Opportunity & Revenue Potential
+| Metric | Conservative | Optimistic |
+|--------|--------------|-----------|
+| Target Student Base | 5,000 | 15,000 |
+| Annual Bookings | 1,500 | 5,000 |
+| Avg. Booking Value | ₹2,000 (token) | ₹2,000 (token) |
+| Commission/Booking | ₹500 | ₹750 |
+| Annual Revenue Potential | ₹7.5L | ₹37.5L |
+| 2-Year Projection | ₹20L | ₹1.2Cr |
+
+---
+
+### 2. Competitive Analysis & Differentiation Strategy
+
+| Platform | Geographic Focus | Student Features | Trust Layer | Commission Model |
+|----------|-----------------|-----------------|-------------|-----------------|
+| MagicBricks | Pan-India | None | Generic ratings | 0-1% (hidden fees) |
+| NoBroker | Pan-India | None | Limited | 0% (premium ads) |
+| **Orbit (Proposed)** | **Hyper-Local** | **Student-Centric** | **Multi-Layer KYC** | **Transparent (10-15%)** |
+
+**Key Differentiators:**
+1. **Hyper-Local Expertise:** Intimate knowledge of Harohalli industrial geography, safety zones, and college connectivity
+2. **Student-First Design:** Filters for Wi-Fi reliability, mess quality, safety ratings, proximity metrics
+3. **Zero-Brokerage Model:** Eliminates 1-month rent burden for students
+4. **Physical Verification:** On-ground team ensures "ghost listings" are eliminated
+5. **WhatsApp-Native Navigation:** Solves the "last-mile" problem in industrial areas
+
+---
+
+### 3. Product Architecture & Technical Specifications
+
+#### 3.1 Technology Stack
+
+```
+Frontend:        Next.js 16.0 + React 19 + TypeScript + Tailwind CSS
+Backend:         Node.js + Express (embedded in Next.js API routes)
+Database:        MongoDB Atlas (production-grade, encrypted)
+Storage:         Cloudinary (image optimization + CDN)
+Authentication:  NextAuth.js v5 + OAuth 2.0 (Auth0)
+Payment Gateway: Razorpay Route (automatic settlement splits)
+Real-time Chat:  Socket.io (WebSocket implementation)
+Hosting:         Vercel (auto-scaling, zero-config deployment)
+```
+
+#### 3.2 Core Features Breakdown
+
+**Feature 1: Advanced Search & Discovery**
+- **Filters:** Budget range, sharing type (single/double/triple), amenities (mess, Wi-Fi, AC), proximity to college
+- **Search Optimization:** Full-text indexing on MongoDB for <200ms response times
+- **Sorting:** Price, safety rating, Wi-Fi score, recent activity
+- **Technology:** Elasticsearch integration (Phase 2) for sub-100ms searches at scale
+
+**Feature 2: 360° Virtual Tour Engine**
+- **Current Implementation:** CloudPano/Kuula integration (freemium tier supports 100+ properties)
+- **Data Collection:** Field team uses Insta360 ONE X2 cameras (₹40K initial investment, reusable)
+- **Coverage:** Room views, common areas (bathroom, kitchen, living space), outside locality
+- **Watermarking:** Automated "Verified by Orbit [Date]" watermark prevents unauthorized reproduction
+- **Fallback:** Professional photography (₹500/property) if 360° unavailable
+
+**Feature 3: Harohalli-Specific Navigation Chatbot**
+- **Platform:** WhatsApp Business API (Twilio/WATI integration)
+- **Functionality:** 
+  - Real-time location pins with walking directions
+  - Video guides: "Turn left at Bosch Factory, cross Highway 48, walk 200m to reach PG"
+  - Public transport info: Auto/bus stop nearest locations
+  - Safety info: "Road is well-lit after 7 PM," "ATM 50m away"
+- **Technology:** LLM integration (OpenAI GPT-4 or Gemini 2.0) for contextual responses
+- **Cost:** ₹2-5K/month (Twilio) or ₹5K/month (WATI), covered by platform margin
+
+**Feature 4: Multi-Layer Verification System**
+
+*For Students:*
+| Step | Method | Timeline | Automation |
+|------|--------|----------|-----------|
+| 1 | Email verification | Immediate | Automated |
+| 2 | College ID/Admission Letter upload | <24 hrs | Manual review (MVP) |
+| 3 | Phone OTP | Immediate | Automated |
+| 4 | Facial recognition (Phase 2) | Optional | AI-powered OCR |
+
+*For PG Owners:*
+| Step | Method | Timeline | Automation |
+|------|--------|----------|-----------|
+| 1 | Aadhaar Paperless Offline e-KYC | <5 mins | Free, government-approved |
+| 2 | Property location verification | Physical visit | Field team audit |
+| 3 | Room condition photography | Physical visit | Team documents condition |
+| 4 | Legal compliance check | Document review | Legal team review |
+
+**Feature 5: Sentiment-Based Feedback Engine**
+- **Review Tags** (replacing generic 5-star system):
+  - *Positive:* "Fast Wi-Fi (100+ Mbps)," "Clean Mess," "24/7 Water," "Safe at Night," "Curfew-Free," "Responsive Owner"
+  - *Negative:* "Strict Warden," "Water Shortage," "Power Issues," "Poor Maintenance," "Noisy Neighbors," "Distant from College"
+  - *Neutral:* "Shared Bathroom," "No Lift," "Industrial Area"
+
+- **Blacklist Management:** Properties receiving 5+ "Unsafe" or "Fraud" flags are automatically delisted (manual review before reinstatement)
+- **Sentiment Score Algorithm:** Weighted scoring based on recent reviews (75% weight to last 30 days)
+- **Transparency Dashboard:** PG owners see real-time feedback with suggested improvements
+
+**Feature 6: Payment & Settlement System**
+- **Payment Flow:**
+  1. Student pays ₹2,000 token advance via Razorpay UPI/Card
+  2. Razorpay Route splits: Orbit keeps ₹500 (commission), ₹1,500 held in trust
+  3. Upon confirmation, ₹1,500 released to owner T+1 day
+  4. Booking receipt emailed to both parties with payment proof
+
+- **Transparent Commission Structure:**
+  - Platform Fee: ₹500/booking (student-side)
+  - Owner Commission: 10% of monthly rent (for listings maintained/updated)
+  - Payment Processing: Razorpay charges 2% (absorbed into platform fee)
+
+**Feature 7: Admin Dashboard & Analytics**
+- **Key Metrics Tracked:**
+  - Total properties verified
+  - Booking conversion rate
+  - Average price per location
+  - Student demographics (course, college)
+  - Owner satisfaction scores
+  - Fraud/complaint incidents
+
+---
+
+### 4. User Journey & Experience Design
+
+#### Student User Flow (Optimized for Conversion)
+
+```
+Step 1: Discovery
+├─ Landing Page → Search "DSU Harohalli" or "Jain University"
+├─ View matching properties (5-50 listings based on filters)
+└─ Sort by: Price, Safety Rating, Wi-Fi Score, Recently Updated
+
+Step 2: Property Evaluation
+├─ View 360° tour (2-3 min per property)
+├─ Read verified reviews with sentiment tags
+├─ Check owner response rate (should be >80% within 24 hrs)
+├─ View "Safety Heatmap" (well-lit areas, nearest ATM, police station)
+└─ Message owner directly (chat within app)
+
+Step 3: Booking Initiation
+├─ Click "Reserve" → Pay ₹2,000 token advance
+├─ Upload photo (for owner verification)
+├─ Confirm move-in date
+└─ Receive booking confirmation + owner's WhatsApp
+
+Step 4: Post-Booking
+├─ Receive WhatsApp navigation video (auto-generated)
+├─ 24 hrs before move-in: Reminder + owner contact
+├─ Move in, settle
+├─ After 7 days: Leave review with sentiment tags
+└─ Option to book mess subscription through app
+```
+
+#### PG Owner User Flow
+
+```
+Step 1: Onboarding
+├─ Sign "Listing Service Agreement" (digital signature)
+├─ Complete Aadhaar e-KYC (5 mins, government-verified)
+├─ Physical verification by Orbit field team (photo audit)
+└─ Receive "Verified by Orbit" badge
+
+Step 2: Property Management
+├─ Dashboard shows: New booking inquiries, room availability status
+├─ Toggle room status: Occupied/Vacant/Under-Maintenance
+├─ Upload room photos (up to 5 per room)
+├─ Set pricing (base rent, meal charges)
+└─ View real-time analytics (impressions, inquiries, bookings)
+
+Step 3: Booking Management
+├─ Receive notification for new booking requests
+├─ Accept/decline booking within 24 hrs
+├─ Collect security deposit separately (outside app)
+├─ Receive first month's rent (minus Orbit commission) T+1 day
+└─ Recurring settlement on 5th of each month
+
+Step 4: Reputation Management
+├─ View student reviews with sentiment tags
+├─ Respond to feedback (required for owner credibility)
+├─ Access "Improvement Suggestions" based on student feedback
+└─ Track historical booking data
+```
+
+---
+
+### 5. Legal & Regulatory Compliance Framework
+
+#### 5.1 Terms & Conditions - Key Clauses
+
+**Listing Service Agreement (Platform as Marketplace)**
+```
+"Orbit operates as a B2B2C marketplace technology platform. Orbit:
+(a) Connects verified students with property owners
+(b) Is NOT a rental agent and does NOT facilitate rental agreements
+(c) Is NOT liable for tenant misconduct, property damage, or lease disputes
+(d) Acts as a payment intermediary only; rent disputes are between parties
+
+Property owners and students enter into a direct rental agreement OUTSIDE the platform."
+```
+
+**User Liability Waiver**
+```
+"Virtual Tours are snapshots as of [DATE]. Orbit is not liable for:
+- Subsequent property condition changes
+- Owner conduct or behavior
+- Third-party claims or disputes
+- Technical platform failures (except willful misconduct)"
+```
+
+#### 5.2 RERA (Real Estate Regulatory Authority) Positioning
+
+| Classification | Our Positioning | Legal Impact |
+|----------------|-----------------|--------------|
+| Real Estate Agent | ❌ NOT claiming | Requires state registration |
+| Broker | ❌ NOT claiming | Requires fees/bonding |
+| **Aggregator/Portal** | ✅ **CLAIMING** | No licensing required (yet) |
+| **Tech Platform** | ✅ **CLAIMING** | Minimal regulatory burden |
+
+**Strategy:** Position Orbit as a **"Tech-Enabled Housing Discovery Platform"** (similar to OLX, Quikr) rather than a real estate agent. This avoids RERA registration initially while maintaining legal defensibility.
+
+#### 5.3 Data Privacy & Security Compliance
+
+**Encryption Standards:**
+- Database: AES-256 encryption at rest (MongoDB Atlas encryption)
+- In-Transit: TLS 1.3 for all API calls
+- PII Storage: Hashed student IDs, encrypted phone numbers
+- Retention: Student data deleted after 2 years (GDPR/India compliance)
+
+**Data Access Control:**
+- Student phone numbers NOT visible to owners until booking token paid
+- Owners' bank account details NOT shared with students
+- Payment transactions encrypted, audit-logged with timestamps
+- Compliance: ISO 27001 certification (Phase 2)
+
+#### 5.4 KYC & Fraud Prevention
+
+**Student Verification (Multi-Step):**
+1. Email verification (OTP)
+2. College ID upload + manual review by admin (MVP)
+3. Phone OTP verification
+4. Payment method verification (first transaction)
+
+**Owner Verification (Multi-Step):**
+1. Aadhaar e-KYC (online, government-verified, free)
+2. Physical property inspection (Orbit field team photos)
+3. Bank account verification (first settlement)
+4. Police verification (Phase 2) for owners with criminal history
+
+---
+
+### 6. Phased Implementation Roadmap
+
+#### Phase 1: Market Validation & MVP Setup (Weeks 1-4)
+
+**Objectives:**
+- Establish market credibility with 20 verified PGs
+- Collect 100+ student feedback forms
+- Validate product-market fit
+- Build initial revenue base
+
+**Deliverables:**
+| Task | Owner | Timeline | Success Metric |
+|------|-------|----------|----------------|
+| Field team setup (2-3 people) | Operations | Week 1 | Team hired & trained |
+| PG partner recruitment (physical visits) | Business | Weeks 1-4 | 20 signed listing agreements |
+| Photography (360° + standard) | Operations | Weeks 2-4 | 20 properties documented |
+| Website launch (MVP, read-only) | Tech | Week 2 | Website live, searchable |
+| Admin dashboard setup | Tech | Week 2 | Dashboard functional |
+| Student acquisition (WhatsApp marketing) | Marketing | Weeks 2-4 | 100 registered students |
+| Feedback collection | Operations | Weeks 3-4 | 100 student reviews collected |
+
+**Marketing Strategy (Low-Cost, High-Reach):**
+- DSU/Jain WhatsApp groups: "Verified housing without brokers"
+- Instagram Reels: Short property tours (DSU students follow 3-4 influencer accounts)
+- Reddit threads: r/bangalore, r/india responses on housing frustrations
+- Testimonial videos: 30-second clips of students sharing experiences
+- Referral incentive: ₹500 referral bonus for each student brought (first 50 students)
+
+**Cost Projection (Phase 1):**
+```
+Field Team (2 people × 4 weeks):          ₹40,000
+Photography Equipment (Insta360 ONE X2):  ₹40,000
+Website Hosting/Domain (Vercel):          ₹0 (free tier)
+WhatsApp Business API (Twilio):           ₹5,000
+Total Phase 1 Investment:                 ₹85,000
+```
+
+#### Phase 2: MVP Launch with Payments (Weeks 5-8)
+
+**Objectives:**
+- Enable live booking with payment processing
+- Expand to 50+ verified properties
+- Achieve 500+ student registrations
+- Generate first ₹2-3L in revenue
+
+**Deliverables:**
+| Task | Owner | Timeline | Success Metric |
+|------|-------|----------|----------------|
+| Razorpay Route integration | Tech | Week 5 | Payment flow tested, live |
+| Owner dashboard (property mgmt) | Tech | Weeks 5-6 | Dashboard functional, 10+ owners testing |
+| Email notifications system | Tech | Week 5 | Transactional emails sent |
+| Sentiment tags implementation | Tech | Week 6 | Review system live with tags |
+| Chat system (owner-student) | Tech | Week 6 | Real-time chat functional |
+| Advanced filtering & search | Tech | Week 7 | Filters reduce property list to <20 |
+| WhatsApp bot integration | Tech | Week 7 | Bot sends location pins, navigation videos |
+| Mobile responsiveness audit | QA | Week 7 | Mobile conversions +30% |
+| Expanded property portfolio | Business | Weeks 5-8 | 50+ verified properties |
+| Marketing campaign (paid ads) | Marketing | Week 8 | ₹20K Google Ads spend, 1000+ impressions |
+
+**Revenue Model Activation:**
+- Booking Fee: ₹500/booking (student-side)
+- Owner Commission: 10% of monthly rent (for active listings)
+- Premium Listing: ₹500/month for featured placement (Phase 2.5)
+- Targeted Revenue: ₹2-3L (50 bookings × ₹2K token avg)
+
+**Cost Projection (Phase 2):**
+```
+Development (Razorpay, chat, filters):    ₹150,000
+Payment Gateway Setup:                     ₹0 (Razorpay charges 2% on transactions)
+Additional Marketing:                      ₹50,000
+Operations/Field Team Expansion:           ₹80,000
+Total Phase 2 Investment:                  ₹280,000
+```
+
+#### Phase 3: Feature Expansion & Scale (Month 3+)
+
+**Objectives:**
+- Achieve 100+ verified properties
+- 2,000+ student registrations
+- ₹10L+ monthly booking volume
+- Expand to adjacent areas (Koramangala, Indiranagar - Phase 3.5)
+
+**New Features:**
+| Feature | Use Case | Timeline | Impact |
+|---------|----------|----------|--------|
+| Roommate Finder | Match students by habits (night owl vs early riser) | Week 9-10 | +15% engagement |
+| Mess Subscription | Students pay for meals through app | Week 11 | +₹5L recurring revenue |
+| AI Chatbot (Gemini 2.0) | 24/7 student support without staff | Week 12 | -40% support costs |
+| Property Analytics Dashboard | Owners track ROI, occupancy rates | Week 10 | +5% owner retention |
+| Landlord Insurance Integration | Partner with brokers for liability insurance | Week 12 | +₹2L partnership revenue |
+| Student Review API | Let employers verify student integrity | Month 4 | B2B revenue stream |
+| Referral Program | ₹1000 referral bonus for both parties | Week 9 | +40% organic growth |
+
+**Market Expansion:**
+- Month 3: Establish presence in 3 Harohalli zones (currently focused on 1 zone)
+- Month 4: Expand to Jain University Bangalore City Campus (Indiranagar)
+- Month 5: Expand to Koramangala tech hub student housing
+
+**Cost Projection (Phase 3):**
+```
+Development (Roommate finder, Mess system, Chatbot): ₹300,000
+Marketing & Expansion:                              ₹200,000
+Operations & Field Team (expanded):                 ₹200,000
+Insurance & Compliance:                             ₹50,000
+Total Phase 3 Investment:                           ₹750,000
+Expected Revenue:                                   ₹20-30L
+```
+
+---
+
+### 7. Key Performance Indicators (KPIs) & Success Metrics
+
+#### Customer Acquisition Metrics
+
+| KPI | Target (Month 3) | Target (Month 6) | Target (Year 1) |
+|-----|-----------------|-----------------|-----------------|
+| Total Registered Students | 500 | 2,000 | 10,000 |
+| Total Verified Properties | 50 | 150 | 500 |
+| Cost Per Student Acquisition | ₹500 | ₹300 | ₹200 |
+| Monthly Active Users | 30% of registered | 40% of registered | 50% of registered |
+| Verified PG Owners | 45 | 130 | 450 |
+
+#### Conversion & Revenue Metrics
+
+| KPI | Target (Month 3) | Target (Month 6) | Target (Year 1) |
+|-----|-----------------|-----------------|-----------------|
+| Booking Conversion Rate | 5% | 12% | 18% |
+| Monthly Bookings | 25 | 150 | 800 |
+| Average Token Value | ₹2,000 | ₹2,000 | ₹2,500 |
+| Monthly Revenue (Bookings) | ₹1.25L | ₹7.5L | ₹20L |
+| Owner Repeat Listing Rate | 80% | 85% | 90% |
+
+#### Quality & Engagement Metrics
+
+| KPI | Target (Month 3) | Target (Month 6) | Target (Year 1) |
+|-----|-----------------|-----------------|-----------------|
+| Avg. Property Rating | 4.2/5.0 | 4.4/5.0 | 4.5/5.0 |
+| Student Review Rate | 60% of bookings | 70% of bookings | 75% of bookings |
+| Owner Response Time | <24 hrs | <12 hrs | <6 hrs |
+| Student Satisfaction (NPS) | 45 | 55 | 65 |
+| Chat/Support Ticket Resolution | 48 hrs | 24 hrs | 12 hrs |
+
+#### Fraud & Compliance Metrics
+
+| KPI | Target (Month 3) | Target (Month 6) | Target (Year 1) |
+|-----|-----------------|-----------------|-----------------|
+| Fraud Incident Rate | <1% of bookings | <0.5% of bookings | <0.2% of bookings |
+| Properties Delisted (Fraud) | 0 | <2 | <5 |
+| Payment Dispute Rate | <2% | <1% | <0.5% |
+| Data Breach Incidents | 0 | 0 | 0 |
+| Regulatory Compliance | 100% | 100% | 100% |
+
+#### Financial Metrics
+
+| KPI | Month 1-3 | Month 4-6 | Month 7-12 |
+|-----|-----------|-----------|-----------|
+| Cumulative Revenue | ₹2.5L | ₹15L | ₹60L |
+| Cumulative Costs | ₹1.5L | ₹6L | ₹25L |
+| Gross Margin | 60% | 65% | 70% |
+| CAC Payback Period | 8 months | 5 months | 3 months |
+| Break-Even Month | Month 8 | - | - |
+
+---
+
+### 8. Risk Assessment & Mitigation
+
+| Risk | Probability | Impact | Mitigation Strategy |
+|------|------------|--------|-------------------|
+| **Low Student Adoption** | Medium | High | Early influencer partnerships, referral incentives |
+| **Owner Churn** | Medium | High | Transparent feedback, quick support, premium tier benefits |
+| **Payment Failures** | Low | Medium | Razorpay multi-retry logic, SMS notifications |
+| **RERA Regulatory Pressure** | Low | Very High | Position as aggregator, legal review, compliance buffer |
+| **Fraud/Fake Properties** | Medium | High | Physical verification, user reviews, blacklist system |
+| **Data Breach** | Low | Very High | AES-256 encryption, penetration testing, cyber insurance |
+| **Market Competition** | Medium | Medium | Hyper-local focus, student testimonials, faster support |
+| **Staff Turnover** | Medium | Medium | Competitive salaries, remote flexibility, stock options |
+
+---
+
+### 9. Next Steps & Immediate Action Items
+
+#### Week 1 Actions (Starting Now)
+- [ ] **Legal:** Finalize "Listing Service Agreement" template (cost: ₹15K legal review)
+- [ ] **Operations:** Hire 2 field coordinators for property verification (cost: ₹20K/month)
+- [ ] **Tech:** Deploy MVP website on Vercel (cost: ₹0, time: 4 hrs)
+- [ ] **Business:** Begin outreach to top 30 PGs in Harohalli via WhatsApp
+- [ ] **Marketing:** Create 5 property tour videos for social media
+
+#### Week 2 Actions
+- [ ] **Tech:** Implement Razorpay Route test environment
+- [ ] **Operations:** Complete physical visits to 10 PGs (1-2 per day)
+- [ ] **Admin:** Set up MongoDB Atlas backup & encryption
+- [ ] **Marketing:** Launch DSU WhatsApp group outreach campaign
+- [ ] **Finance:** Open business bank account with Razorpay settlement link
+
+#### Week 3-4 Actions
+- [ ] **Tech:** Go live with booking payments (limited to beta users first)
+- [ ] **Operations:** Finalize 20 PG partnerships with signed agreements
+- [ ] **Marketing:** Activate referral program (₹500 student bonus)
+- [ ] **Admin:** Hire 1 part-time customer support person (cost: ₹10K/month)
+- [ ] **Finance:** Forecast Month 1-3 revenue and expenses
+
+#### Month 2 Actions
+- [ ] **Tech:** Implement WhatsApp bot navigation feature
+- [ ] **Expansion:** Scout for opportunities in Jain University Bangalore City Campus
+- [ ] **Partnership:** Reach out to DSU administration for formal partnership
+- [ ] **Marketing:** Run first Google Ads campaign (₹10K budget)
+- [ ] **Analytics:** Set up Mixpanel/Google Analytics for tracking
+
+---
+
+### 10. Investment & Financial Projections
+
+#### Total Investment Required
+
+| Category | Amount | Notes |
+|----------|--------|-------|
+| Technology Development | ₹2,00,000 | Next.js setup, integrations, hosting |
+| Operations & Field Team | ₹3,00,000 | 2 coordinators × 3 months |
+| Photography Equipment | ₹40,000 | Insta360 camera (one-time) |
+| Legal & Compliance | ₹50,000 | Legal review, terms, KYC setup |
+| Marketing & Acquisition | ₹1,50,000 | Ads, content, influencers |
+| **Total Initial Investment** | **₹7,40,000** | **4-month runway to profitability** |
+
+#### Revenue Projections (Conservative)
+
+| Month | Properties | Students | Bookings | Revenue | Cumulative |
+|-------|-----------|----------|----------|---------|------------|
+| Month 1 | 5 | 50 | 2 | ₹10,000 | ₹10,000 |
+| Month 2 | 15 | 150 | 8 | ₹50,000 | ₹60,000 |
+| Month 3 | 30 | 400 | 20 | ₹1,25,000 | ₹1,85,000 |
+| Month 4 | 50 | 800 | 45 | ₹2,50,000 | ₹4,35,000 |
+| Month 5 | 80 | 1,500 | 85 | ₹4,50,000 | ₹8,85,000 |
+| Month 6 | 120 | 2,500 | 140 | ₹7,50,000 | ₹16,35,000 |
+
+**Break-Even Analysis:** Profitability achieved by **Month 6** with cumulative revenue of ₹16.35L exceeding ₹7.4L investment + operational costs.
+
+---
+
+### 11. Client Recommendations & Strategic Considerations
+
+#### Short-Term Priorities (0-3 Months)
+
+1. **Launch MVP Immediately:** Don't wait for perfection. Start with 10 properties and iterate based on student feedback.
+2. **Build Trust First:** Physical presence beats online promises. Visit every PG, take professional photos, meet owners.
+3. **Focus on Word-of-Mouth:** In student communities, referrals drive 60%+ of growth. Invest in early adopter testimonials.
+4. **Transparent Pricing:** Clearly communicate the ₹500 booking fee. Students value honesty over hidden charges.
+
+#### Medium-Term Priorities (3-6 Months)
+
+1. **Expand to 3-5 Harohalli Zones:** Once you've perfected operations in one zone, replicate the model.
+2. **Partner with Colleges:** DSU & Jain University can refer students to Orbit in return for institutional bulk discounts.
+3. **Introduce Premium Tier:** Offer "Featured Listing" (₹500/month) for owners wanting top placement.
+4. **Develop Mess Subscription:** This creates recurring revenue independent of booking volume.
+
+#### Long-Term Vision (6-12 Months)
+
+1. **Expand to Other Cities:** Replicate Harohalli success to other college towns (Pune, Hyderabad, Delhi NCR).
+2. **Build Ecosystem Services:** Insurance, roommate matching, job placement, alumni network.
+3. **Raise Series A Funding:** Use PMF data to attract institutional investors. Target ₹2-5Cr Series A at 18-24 month mark.
+4. **Exit Strategy:** Acquisition by MagicBricks, NoBroker, or OLX (likely buyer) at 3-4x revenue multiple.
+
+#### Competitive Moat
+
+- **Network Effects:** First-mover advantage in Harohalli creates defensible moat (hard to dislodge once 100+ properties listed)
+- **Data Advantage:** Accumulated student reviews, safety heatmaps, owner ratings become proprietary asset
+- **Brand Trust:** "Verified by Orbit" badge becomes synonymous with "safe housing" in student minds
+- **Ecosystem Lock-in:** Mess, insurance, and other services create multiple revenue streams and user stickiness
+
+---
+
+### 12. Success Stories & Case Studies (To Include in Sales Pitch)
+
+*[Template for future use as you gain customers]*
+
+**Case Study 1: "The Concerned Parent"**
+- Concern: Parent worried about daughter's safety in industrial area
+- Solution: Orbit provided 360° tours, safety heatmap, student reviews
+- Outcome: Parent confident, daughter moved in, left 4.8/5 review
+- Testimonial: "First time I felt my daughter was really safe. Orbit gave me peace of mind."
+
+**Case Study 2: "The Smart Owner"**
+- Concern: PG owner struggled with student inquiries, high turnover
+- Solution: Orbit's dashboard + WhatsApp integration + review system
+- Outcome: 90% occupancy rate (up from 60%), bookings 3x monthly
+- Testimonial: "I went from struggling to having a waiting list. Orbit changed my business."
+
+---
+
+## Session 3 Updates
+
+### Avatar Upload Feature (NEW)
+- ✅ **Created `/api/admin/upload-avatar` endpoint**
+  - POST endpoint with FormData multipart support
+  - File validation: 5MB max, image MIME types only
+  - Cloudinary integration for image hosting
+  - Auto-optimization of images (quality: auto, format: auto)
+  - Returns secure_url for image storage
+  - Creates AuditLog entry for admin tracking
+
+- ✅ **Enhanced `/api/admin/profile` endpoint**
+  - Added GET method to fetch admin profile data
+  - Returns: name, email, role, avatar (image URL)
+  - Complements existing PUT method for updates
+
+- ✅ **Admin Profile Page Updates** (`/src/app/admin/profile/page.tsx`)
+  - Changed from useSession hook to API-based fetching
+  - Prevents SessionProvider errors
+  - Added "Change Avatar" button with file picker
+  - Hidden input: `accept="image/*"`
+  - onClick triggers file picker: `document.getElementById('avatar-upload')?.click()`
+  - Displays new avatar immediately after upload
+
+### Package Installations
+- ✅ **cloudinary** (v1.x) - Image hosting and optimization
+- ✅ **date-fns** (v3.x) - Date formatting for audit logs
+- ✅ **react-csv** (v2.x) - CSV export for audit logs
+
+### Navigation & Routing Fixes
+- ✅ **Sign-in Callback URL** - Changed from `/dashboard` to `/`
+  - Users now redirect to home page after login
+  - Consistent with home page as landing area
+  - Works for both admin and regular users
+
+- ✅ **Updated `src/app/auth/signin/page.tsx`**
+  - Modified signIn callback: `callbackUrl: '/'`
+  - Users see home page first after authentication
 
 ---
 
@@ -303,7 +916,7 @@ Infrastructure:
 
 ---
 
-## What's Implemented ✅ (60%)
+## What's Implemented ✅ (75%)
 
 ### Pages & Features
 
@@ -314,23 +927,32 @@ Infrastructure:
 | **Property Details** | ✅ Complete | Full page with images, amenities, reviews |
 | **Property Gallery** | ✅ Complete | 4-image grid with tabs (Photos, 360°, Video) |
 | **Dashboard** | ✅ Complete | Student bookings view |
-| **Auth System** | ✅ Complete | Login/signup with Auth0 |
+| **Auth System** | ✅ Complete | Login/signup with Auth0 + NextAuth |
 | **AI Chatbot** | ✅ Complete | Gemini integration working |
-| **Booking** | ⚠️ Partial | Creates bookings, no payment flow |
+| **Booking** | ⚠️ Partial | Creates bookings, no payment flow yet |
 | **Reviews** | ✅ Complete | Rate and comment on properties |
-| **Admin Dashboard** | ✅ Complete | Overview, stats, service cards |
-| **Admin Users** | ✅ Complete | List, verify, blacklist users |
-| **Admin Properties** | ✅ Complete | Approve/reject, view property details |
-| **User Verification** | ✅ Complete | Email verification, verify/unverify UI |
-| **Blacklist** | ✅ Complete | Flag to block users |
+| **Admin Dashboard** | ✅ Complete | Overview, stats, real-time data |
+| **Admin Users** | ✅ Complete | List, verify, blacklist with reasons |
+| **Admin Properties** | ✅ Complete | Approve/reject, view details |
+| **Admin Profile** | ✅ Complete | Edit info, change password, avatar |
+| **Admin 2FA** | ✅ Complete | TOTP-based 2FA with QR code |
+| **Audit Logs** | ✅ Complete | Track all admin actions, CSV export |
+| **Admin Bookings** | ✅ Complete | View all bookings with status |
+| **Blacklist Page** | ✅ Complete | Dedicated UI for blacklisted users |
+| **User Verification** | ✅ Complete | Email verification, verify/unverify |
+| **Owner Dashboard** | ✅ Complete (UI) | Dashboard, properties list, add property wizard (7 steps) |
+| **Admin View Owner Dashboard** | ✅ Complete | Admins can view owner dashboards from Users > Owners |
+| **Unified Auth** | ✅ Complete | Single sign-in with auto-detection of user/owner role |
 | **Icon-based UI** | ✅ Complete | Status indicators with Lucide icons |
-| **Rupee Currency** | ✅ Complete | All prices in ₹ format with Indian locales |
+| **Rupee Currency** | ✅ Complete | All prices in ₹ format |
 
-### API Routes Implemented
+### API Routes Implemented (30+ Endpoints)
 
 ```
+CORE ROUTES:
 GET  /api/properties          → List all properties (auto-seeds if empty)
 POST /api/properties          → Create new property (owner only)
+PATCH /api/properties/[id]    → Update property details
 GET  /api/auth/session        → Get logged-in user session
 POST /api/bookings/create     → Create booking (no payment yet)
 GET  /api/chat               → AI chatbot endpoint
@@ -339,48 +961,61 @@ GET  /api/seed               → Manually seed database
 GET  /api/debug              → Debug database info
 GET  /api/test               → Test endpoint
 
-ADMIN ROUTES:
+ADMIN ROUTES (15+ Endpoints):
 GET  /api/admin/stats        → Dashboard statistics
 GET  /api/admin/properties   → List all properties
 PATCH /api/admin/properties/[id] → Approve/reject property
 GET  /api/admin/users        → List all users
-GET  /api/admin/profile      → Get admin profile data (NEW)
+GET  /api/admin/profile      → Get admin profile data
 PUT  /api/admin/profile      → Update admin profile (name, email)
-POST /api/admin/upload-avatar → Upload admin avatar to Cloudinary (NEW)
+POST /api/admin/upload-avatar → Upload admin avatar to Cloudinary
+POST /api/admin/change-password → Securely change admin password
 POST /api/admin/users/[id]/verify → Verify/unverify user
-POST /api/admin/users/[id]/blacklist → Blacklist/unblacklist user with reason
+POST /api/admin/users/[id]/blacklist → Blacklist/unblacklist user
 GET  /api/admin/bookings     → List all bookings
-GET  /api/admin/audit-logs   → Get audit log entries (NEW)
-POST /api/admin/setup        → Create admin user (multi-param support)
+GET  /api/admin/audit-logs   → Get audit log entries (with filtering)
+POST /api/admin/audit-logs   → Create audit log entries
+POST /api/admin/setup        → Create admin user
+POST /api/admin/2fa/setup    → Setup TOTP 2FA (generates secret)
+POST /api/admin/2fa/verify   → Verify 2FA token
 ```
 
 ### Key Features Working
 
-- ✅ User can browse properties with filtering
+- ✅ User can browse properties with full details
 - ✅ Search by property name/address
 - ✅ View detailed property info with image gallery
-- ✅ Read reviews from students
+- ✅ Read and write reviews
 - ✅ Chat with AI assistant
 - ✅ Create booking request
 - ✅ Google Maps integration (location display)
 - ✅ Image gallery with 4-image grid system
 - ✅ Real-time user sessions
-- ✅ **Admin dashboard with live statistics**
-- ✅ **User verification and blacklist management**
-- ✅ **Property approval workflow**
-- ✅ **Role-based access control (admin/owner/student)**
-- ✅ **Icon-based status indicators**
-- ✅ **Rupee (₹) pricing format**
+- ✅ **Admin dashboard with live statistics and real-time data**
+- ✅ **User verification and blacklist management with dedicated page**
+- ✅ **Property approval workflow with audit trail**
+- ✅ **Role-based access control (admin/owner/student) with 2FA**
+- ✅ **Icon-based status indicators throughout UI**
+- ✅ **Rupee (₹) pricing format with Indian localization**
 - ✅ **Multiple admin accounts support**
+- ✅ **Secure 2FA authentication for admins**
+- ✅ **Comprehensive audit logging for compliance**
+- ✅ **Admin password management with secure endpoints**
+- ✅ **CSV export for audit logs and reporting**
+- ✅ **Owner Dashboard UI** - Dashboard with stats cards, Properties list page, Multi-step property wizard (7 steps)
+- ✅ **Admin can view owner dashboards and details from admin Users section**
+- ✅ **Owner Dashboard Features** - Emerald theme, fixed navigation with proper layout, admin impersonation mode
+- ✅ **Mandatory Step Validation** - Users cannot proceed without completing current step
+- ✅ **Document Verification UI** - Mockup for Aadhar and property proof verification
 
 ---
 
-## What's Missing ❌ (60%)
+## What's Missing ❌ (20% Remaining)
 
 ### Critical Features (Blocking Launch)
 
 #### 1. Payment Gateway ❌
-**Why Critical**: Can't complete transactions
+**Why Critical**: Can't complete transactions, no revenue model active
 
 **What's needed**:
 - Razorpay integration
@@ -389,21 +1024,31 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 - Webhook handling
 - Receipt generation
 
-**Effort**: 3-4 hours
+**Effort**: 4-5 hours
 **Cost**: $0 (Razorpay free for testing)
 
-#### 2. Owner Dashboard ❌
-**Why Critical**: Owners can't manage properties
+#### 2. **Owner Dashboard Backend API** ⏳ (UI 100%, Backend 0%)
+**Status**: Frontend UI Complete - Needs API Integration
+**Why Critical**: Owners can't submit properties to database
+
+**What's already done** ✅:
+- `/owner/dashboard` page with stats cards
+- `/owner/properties` list page
+- `/owner/property/new` - Multi-step property wizard (7 steps)
+- Admin can impersonate owner dashboards
+- Emerald theme design system
+- Fixed navigation with proper layout
+- Mandatory step validation
+- Document verification UI mockup
 
 **What's needed**:
-- `/owner/dashboard` page
-- `/owner/properties` list page
-- `/owner/property/[id]/edit` edit page
-- Property CRUD operations
-- Availability management
-- Pricing management
+- Property submission API endpoint (`POST /api/owner/properties`)
+- Property CRUD operations backend
+- Document upload integration with Cloudinary
+- Property verification workflow
+- Admin notification system for new properties
 
-**Effort**: 5-6 hours
+**Effort**: 4-5 hours
 **Cost**: $0
 
 #### 3. File Upload System ❌
@@ -422,7 +1067,33 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 ### High Priority Features
 
-#### 4. Real-time Availability Updates ⚠️
+#### 4. 🔥 Roommate Matching System (NEW!) - "Tinder for Roommates"
+**Why Important**: Enable students to find compatible roommates - high engagement feature!
+
+**What's needed**:
+- **Roommate Profile Model**: Preferences, habits, budget range, cleanliness level, smoking/drinking, party preference, study habits
+- **Roommate Discovery Page** (`/roommates/discover`): Tinder-style swipe interface
+- **Matching Algorithm**: Match based on compatibility scores
+- **Match Notifications**: Push notifications when mutual match occurs
+- **Chat System**: Direct messaging between matched roommates
+- **Profile Edit Page** (`/roommates/profile`): Update preferences and profile
+- **Matches List Page** (`/roommates/matches`): View all matches and conversations
+
+**Features**:
+- Like/Pass swipe interface
+- Mutual match confirmation
+- In-app messaging
+- Profile completeness indicator
+- Compatibility percentage
+- Filter by preferences
+
+**Effort**: 10-12 hours
+**Cost**: $0
+**Revenue Impact**: +15-20% engagement (based on PRD)
+
+---
+
+#### 5. Real-time Availability Updates ⚠️
 **Issue**: When owner updates availability, students don't see it instantly
 
 **Solution**: 
@@ -431,7 +1102,7 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 **Effort**: 3-4 hours
 
-#### 5. Room Type Variations ⚠️
+#### 6. Room Type Variations ⚠️
 **Issue**: All rooms priced same, can't show 1RK vs 2BHK
 
 **Solution**: 
@@ -442,7 +1113,7 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 **Effort**: 3-4 hours
 
-#### 6. Advanced Search Filters ⚠️
+#### 7. Advanced Search Filters ⚠️
 **Issue**: Only text search, no price/amenity filters
 
 **Solution**:
@@ -458,7 +1129,7 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 ### Medium Priority Features
 
-#### 7. Email Notifications ⚠️
+#### 8. Email Notifications ⚠️
 **Purpose**: Confirmation emails for bookings, payments
 
 **What's needed**:
@@ -471,7 +1142,7 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 **Effort**: 2-3 hours
 **Cost**: Free tier (100/day)
 
-#### 8. Virtual Tours (360°) ⚠️
+#### 9. Virtual Tours (360°) ⚠️
 **Purpose**: Students see PG before visiting
 
 **Options**:
@@ -482,19 +1153,22 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 **Effort**: 2-5 hours (depends on option)
 **Cost**: Free for YouTube
 
-#### 9. Admin Dashboard ⚠️
-**Purpose**: Approve properties, manage users
+#### 10. Owner Dashboard (Builder Feature) ⚠️
+**Purpose**: Owners can self-serve manage properties
 
 **What's needed**:
-- `/admin/dashboard` page
-- Property approval system
-- User blacklist management
-- Analytics/reporting
-- Content moderation
+- `/owner/dashboard` page with stats
+- `/owner/properties` list page
+- `/owner/property/[id]/edit` edit page
+- Property CRUD operations
+- Availability calendar
+- Pricing management
+- Booking management for owner
+- Income/analytics for owner
 
 **Effort**: 6-8 hours
 
-#### 10. Enhanced Verification ⚠️
+#### 11. Enhanced Verification ⚠️
 **Purpose**: Build trust on platform
 
 **What's needed**:
@@ -510,66 +1184,69 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 ## Implementation Roadmap
 
-### Phase 1: Core Monetization (Weeks 1-2)
+### Phase 1: Owner Dashboard Backend API & Payment Gateway (PRIORITY - Weeks 1-2)
 
-**Goal**: Enable payments and owner management
+**Goal**: Enable owner property submission and payment processing
 
-**Week 1 Tasks**:
-1. Setup Razorpay account
-2. Create `/api/bookings/create` endpoint
-3. Create `/api/bookings/[id]/verify` endpoint
-4. Create webhook handler
-5. Setup Cloudinary
-6. Create `/api/upload` endpoint
+**Week 1 Tasks (Owner Dashboard Backend API - PRIORITY)**:
+1. Create POST `/api/owner/properties` endpoint to save property data
+2. Add property submission validation
+3. Integrate document upload to Cloudinary
+4. Create property verification workflow
+5. Setup admin notification system for new properties
+6. Create database records for submitted properties
+7. Test property submission from wizard form
 
-**Week 2 Tasks**:
-1. Build `/owner/dashboard` page
-2. Build `/owner/properties` page
-3. Build `/owner/property/[id]/edit` page
-4. Create `PATCH /api/properties/[id]` endpoint
-5. Add file upload UI to edit page
-6. Test end-to-end booking flow
+**Week 2 Tasks (Payment Gateway)**:
+1. Setup Razorpay account and get API keys
+2. Add Razorpay keys to .env.local
+3. Create payment processing endpoints
+4. Create webhook handler for payment verification
+5. Setup email notifications for payment confirmations
+6. Test payment flow locally with test cards
 
 **Outcome**: 
-- ✅ Students can pay for bookings
-- ✅ Owners can manage properties
+- ✅ Students can pay for bookings via Razorpay
+- ✅ Owners can manage properties self-serve
 - ✅ Real property images uploaded
+- ✅ Revenue model active
 
 ---
 
-### Phase 2: User Experience (Weeks 3-4)
+### Phase 2: Roommate Matching + Search Filters (Weeks 3-4)
 
-**Goal**: Improve search and filtering
+**Goal**: Build engagement feature + improve discovery
 
-**Week 3 Tasks**:
+**Week 3 Tasks (Roommate Matching)**:
+1. Create Roommate model with preferences
+2. Build `/roommates/profile` page
+3. Build `/roommates/discover` page with swipe UI
+4. Implement matching algorithm
+5. Create match notifications
+6. Build `/roommates/matches` page
+
+**Week 4 Tasks (Search & Email)**:
 1. Add filter UI to `/search` page
 2. Implement price range filter
 3. Implement amenities filter
-4. Implement location distance filter
-5. Implement room type filter
-6. Update Property schema with room types
-
-**Week 4 Tasks**:
-1. Setup SendGrid
-2. Create email templates (HTML)
-3. Create booking confirmation email
-4. Create payment receipt email
-5. Add email triggers to API
-6. Test email delivery
+4. Setup SendGrid
+5. Create email templates (booking confirmation, payment receipt)
+6. Add email triggers
 
 **Outcome**:
-- ✅ Users can filter by preferences
-- ✅ Different room types with pricing
-- ✅ Booking confirmations via email
+- ✅ Roommate matching system live (Tinder for roommates)
+- ✅ Advanced search filters working
+- ✅ Email notifications sent
+- ✅ +15-20% engagement boost expected
 
 ---
 
-### Phase 3: Trust & Features (Weeks 5-6)
+### Phase 3: Virtual Tours & Verification (Weeks 5-6)
 
-**Goal**: Build trust, differentiate product
+**Goal**: Build trust and differentiate product
 
 **Week 5 Tasks**:
-1. Choose virtual tour method
+1. Choose virtual tour method (YouTube 360 recommended)
 2. Integrate YouTube 360 or Three.js
 3. Setup Twilio for SMS
 4. Add phone verification flow
@@ -577,33 +1254,35 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 **Week 6 Tasks**:
 1. Add verification badges to profiles
-2. Create admin property approval system
+2. Create verification dashboard for admins
 3. Test verification flows
 4. Document verification process
+5. Create admin tools for verification management
 
 **Outcome**:
 - ✅ Virtual tours for properties
 - ✅ Verified student/owner badges
-- ✅ Admin can approve listings
+- ✅ Enhanced trust on platform
 
 ---
 
-### Phase 4: Analytics & Scale (Week 7)
+### Phase 4: Analytics & Launch (Week 7+)
 
-**Goal**: Track metrics, enable admin functions
+**Goal**: Monitor performance and scale
 
 **Tasks**:
-1. Build `/admin/dashboard` page
-2. Create `/admin/properties` page
-3. Create `/admin/users` page
-4. Setup analytics tracking
-5. Create admin authentication
-6. Test admin panel
+1. Setup analytics dashboard
+2. Implement user behavior tracking
+3. Create business metrics dashboard
+4. Setup error tracking (Sentry)
+5. Performance testing
+6. Final QA and bug fixes
+7. Deploy to production
 
 **Outcome**:
-- ✅ Admin dashboard working
+- ✅ Analytics dashboard working
 - ✅ Business metrics tracked
-- ✅ Ready to scale
+- ✅ Ready for beta launch
 
 ---
 
@@ -611,7 +1290,7 @@ POST /api/admin/setup        → Create admin user (multi-param support)
 
 ### Update Property Model
 
-**Add these fields**:
+**Add these fields for complete functionality**:
 ```typescript
 roomTypes: Array<{
   type: string,           // "1RK", "Double Sharing", "Triple Sharing"
@@ -639,6 +1318,37 @@ roomFeatures?: {
   bathroom: string        // Shared, Attached, etc
   ac: boolean
   parking: boolean
+}
+```
+
+### New Model to Create - Roommate (For Phase 2)
+
+**Roommate Model (NEW - IMPORTANT FOR ROOMMATE MATCHING)**:
+```typescript
+{
+  _id: ObjectId
+  userId: ObjectId (reference to User - must be student)
+  age: number
+  gender: string
+  budget: number
+  preferences: {
+    sleepTime: string           // "early", "late", "night_owl"
+    cleanliness: "5-star" | "4-star" | "3-star"
+    smoking: boolean
+    drinking: boolean
+    partying: boolean
+    studyHabits: "serious" | "moderate" | "relaxed"
+    guestPolicy: "open" | "limited" | "restricted"
+    roomType: string            // "single", "double", "triple"
+  }
+  bio?: string
+  avatar?: string
+  verified: boolean
+  likes: [ObjectId]              // Users this person liked
+  passes: [ObjectId]             // Users this person passed
+  matches: [ObjectId]            // Mutual matches
+  createdAt: Date
+  updatedAt: Date
 }
 ```
 
@@ -1298,14 +2008,15 @@ npm run dev
 - **Timeline**: Planned for Phase 1
 - **Workaround**: Manual verification needed
 
-#### 2. **Owner Dashboard Missing**
-- ❌ Property owners cannot manage their listings
+#### 2. **Owner Dashboard Backend API Missing** ⏳
+- ✅ Property owner UI complete (dashboard, properties list, add property wizard)
+- ❌ Property submission API not integrated with database
 - ❌ No property edit/update functionality
 - ❌ No booking management for owners
 - ❌ No income/analytics dashboard
-- **Impact**: Owners cannot self-serve platform
-- **Timeline**: Planned for Phase 1
-- **Current**: Only admins can manage properties
+- **Impact**: Owners can fill form but can't submit properties
+- **Timeline**: Phase 1 (Priority THIS WEEK)
+- **Current**: UI 100% complete, need backend integration
 
 #### 3. **Limited File Upload**
 - ❌ Only admin avatar upload implemented
@@ -1518,13 +2229,41 @@ npm run dev
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | Nov 24, 2025 | Initial documentation |
-| 1.1 | Nov 25, 2025 | Session 3 - Avatar upload feature, routing fixes, hydration warnings resolved |
+| 1.1 | Nov 25, 2025 | Session 3 - Avatar upload, routing fixes, hydration warnings resolved |
+| 1.2 | Nov 26, 2025 | Session 4 - 2FA system, audit logs, admin complete, roommate feature roadmap added |
 
 ---
 
-**Document Last Updated**: November 25, 2025  
-**Project Status**: 65% Complete - Avatar upload ready, routing optimized, all hydration issues fixed  
-**Next Review**: After Week 1 of Phase 1 Implementation (Payment Gateway)
+## 🔥 Recent Session 4 Updates (November 26, 2025)
+
+### ✅ Completed Features
+- **2FA System**: TOTP-based authentication with speakeasy library
+- **Audit Logs**: Complete admin action tracking with GET/POST endpoints
+- **Admin Password Management**: Secure password change endpoint  
+- **Blacklist Page**: Dedicated UI for managing blacklisted users
+- **Admin Profile Management**: Edit profile info, change avatar
+- **Bookings Tracking**: Admin can view all bookings with status
+- **CSV Export**: Audit logs export to CSV for reporting
+
+### 📊 Status Update
+- **Project Progress**: 65% → 75% Complete
+- **Admin System**: 80%+ Complete (all features working)
+- **Database Models**: 4 → 5 (added AuditLog)
+- **API Endpoints**: 20+ → 30+ endpoints
+- **Admin Routes**: 7 → 15 endpoints
+
+### 🎯 Next Priority
+1. **Roommate Matching System** (Tinder for roommates) - NEW FEATURE
+2. **Payment Gateway** (Razorpay)
+3. **Owner Dashboard** (self-serve management)
+4. **Advanced Search Filters** + Email Notifications
+
+---
+
+**Document Last Updated**: November 26, 2025  
+**Project Status**: 75% Complete - Admin dashboard fully functional with 2FA, audit logs, and complete profile management  
+**Next Priority**: Roommate matching system + Payment gateway integration
+**Next Review**: After Phase 1 completion (Payment + Owner Dashboard)
 
 ---
 

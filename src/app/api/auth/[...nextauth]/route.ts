@@ -20,14 +20,14 @@ export const authOptions: NextAuthOptions = {
             async authorize(credentials) {
                 // Mock login for demo purposes
                 if (
-                    credentials?.email === 'student@orbit.com' &&
+                    credentials?.email === 'user@orbit.com' &&
                     credentials?.password === 'password'
                 ) {
                     return {
-                        id: 'mock_student_id',
-                        name: 'Demo Student',
-                        email: 'student@orbit.com',
-                        role: 'student',
+                        id: 'mock_user_id',
+                        name: 'Demo User',
+                        email: 'user@orbit.com',
+                        role: 'user',
                     };
                 }
                 if (
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
                         name: user.name,
                         email: user.email,
                         image: user.image,
-                        role: 'student', // Default role
+                        role: 'user', // Default role
                         isVerified: false,
                     });
                 }

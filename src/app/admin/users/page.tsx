@@ -7,7 +7,8 @@ import { PageHeader } from '@/components/admin/ui/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Loader2, CheckCircle2, XCircle, ShieldAlert, ShieldCheck, Mail, User, Pin, PinOff, Search } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, ShieldAlert, ShieldCheck, Mail, User, Pin, PinOff, Search, LayoutDashboard } from 'lucide-react';
+import Link from 'next/link';
 
 interface UserData {
   _id: string;
@@ -328,6 +329,16 @@ export default function AdminUsersPage() {
                           >
                             <CheckCircle2 className="w-4 h-4" />
                           </button>
+                        )}
+
+                        {user.role === 'owner' && (
+                          <Link
+                            href={`/owner/dashboard?ownerId=${user._id}`}
+                            className="p-2 rounded-lg hover:bg-blue-500/10 text-zinc-400 hover:text-blue-500 transition-colors"
+                            title="View Owner Dashboard"
+                          >
+                            <LayoutDashboard className="w-4 h-4" />
+                          </Link>
                         )}
 
                         {user.blacklisted ? (

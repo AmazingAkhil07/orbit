@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏠 Orbit - Student Housing Marketplace
 
-## Getting Started
+**Project**: Hyper-localized student housing platform connecting students with verified property owners.  
+**Status**: 🟢 In Active Development (Admin Dashboard ✅ Complete | Owner Dashboard 70% Complete)  
+**Last Updated**: December 5, 2025
 
-First, run the development server:
+---
+
+## 📊 Project Progress
+
+### Completed Features (✅)
+- **Admin Dashboard** - Full property management, user verification, booking oversight
+- **User Authentication** - Role-based login (User/Owner/Admin)
+- **Property Listings** - Properties management and search
+- **Audit Logging** - Complete audit trail for admin actions
+
+### In Progress (⏳)
+- **Owner Dashboard** - Property management, add new properties (70% complete)
+  - Multi-step property addition wizard
+  - Document verification system
+  - Property analytics
+  
+### Coming Soon (📅)
+- Payment gateway integration (Razorpay)
+- User booking system
+- Review & rating system
+- Chat/messaging system
+- Mobile app version
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- MongoDB Atlas account
+- Cloudinary account (for image hosting)
+- NextAuth.js configured
+
+### Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Setup environment variables (copy from .env.example)
+cp .env.example .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Demo Credentials
 
-## Learn More
+**User Account:**
+- Email: `user@orbit.com`
+- Password: `password`
 
-To learn more about Next.js, take a look at the following resources:
+**Owner Account:**
+- Email: `owner@orbit.com`
+- Password: `password`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Admin Account:**
+- Email: (Available in admin setup)
+- Password: (Available in admin setup)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+orbit-clone/
+├── src/
+│   ├── app/
+│   │   ├── admin/           # Admin dashboard pages
+│   │   ├── owner/           # Owner dashboard pages
+│   │   ├── auth/            # Authentication pages
+│   │   └── api/             # API routes
+│   ├── components/          # Reusable React components
+│   ├── models/              # MongoDB schemas
+│   └── lib/                 # Utilities & helpers
+├── public/                  # Static assets
+└── docs/                    # Documentation
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📚 Documentation
+
+Comprehensive documentation files are available:
+
+- **[OWNER_DASHBOARD_IMPLEMENTATION_PLAN.md](./OWNER_DASHBOARD_IMPLEMENTATION_PLAN.md)** - Owner dashboard development plan
+- **[ADMIN_DASHBOARD_COMPLETE.md](./ADMIN_DASHBOARD_COMPLETE.md)** - Admin dashboard documentation
+- **[ORBIT_PG_DATABASE_DOCUMENTATION.md](./ORBIT_PG_DATABASE_DOCUMENTATION.md)** - Complete technical & business docs
+- **[API_AND_SERVICES_DOCUMENTATION.md](./API_AND_SERVICES_DOCUMENTATION.md)** - API reference & services guide
+- **[PROPERTY_VERIFICATION_GUIDE.md](./PROPERTY_VERIFICATION_GUIDE.md)** - Property verification process
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 16, React, Tailwind CSS, Framer Motion
+- **Backend**: Node.js, Next.js API Routes
+- **Database**: MongoDB Atlas
+- **Authentication**: NextAuth.js
+- **Image Hosting**: Cloudinary
+- **Styling**: Tailwind CSS with custom design system
+
+---
+
+## 📞 Support
+
+For questions or issues, please refer to the comprehensive documentation files or contact the development team.

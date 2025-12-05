@@ -80,6 +80,7 @@ export default function HeroSection() {
                                 type="text" 
                                 placeholder="Search by college or city..." 
                                 className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-zinc-600 text-lg"
+                                suppressHydrationWarning
                             />
                             <Magnetic>
                                 <Button 

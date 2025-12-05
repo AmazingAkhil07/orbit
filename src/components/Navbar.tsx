@@ -47,6 +47,14 @@ export function Navbar() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-4">
+                    {!session && (
+                        <Link href="/owner/dashboard" className="hidden md:block">
+                            <Button variant="ghost" size="sm" className="text-zinc-300 hover:text-white hover:bg-white/10 rounded-full">
+                                List Your Property
+                            </Button>
+                        </Link>
+                    )}
+
                     <Link href="/search">
                         <Magnetic>
                             <Button variant="ghost" size="sm" className="text-zinc-300 hover:text-white hover:bg-white/10 rounded-full">
@@ -84,11 +92,19 @@ export function Navbar() {
                                         <DropdownMenuSeparator className="bg-zinc-800" />
                                     </>
                                 )}
+                                {(session.user as any)?.role === 'owner' && (
+                                    <>
+                                        <DropdownMenuItem asChild className="focus:bg-zinc-800 focus:text-white cursor-pointer">
+                                            <Link href="/owner/dashboard">Owner Dashboard</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator className="bg-zinc-800" />
+                                    </>
+                                )}
                                 <DropdownMenuItem asChild className="focus:bg-zinc-800 focus:text-white cursor-pointer">
                                     <Link href="/">Home</Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="bg-zinc-800" />
-                                <DropdownMenuItem onClick={() => signOut()} className="focus:bg-zinc-800 focus:text-white cursor-pointer">
+                                <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })} className="focus:bg-zinc-800 focus:text-white cursor-pointer">
                                     Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
