@@ -46,6 +46,7 @@ async function getUserBookings(userId: string) {
       totalAmount: booking.totalAmount || 0,
       amountPaid: booking.amountPaid || 0,
       createdAt: booking.createdAt?.toISOString() || new Date().toISOString(),
+      updatedAt: booking.updatedAt?.toISOString() || new Date().toISOString(),
       ownerResponse: booking.ownerResponse || null,
     })) as BookingItem[];
   } catch (error) {
